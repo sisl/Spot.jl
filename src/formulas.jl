@@ -13,6 +13,7 @@ return true if the formula is a Linear Temporal Logic formula
 is_ltl_formula(f::SpotFormula) = f.f[:is_ltl_formula]()
 
 to_str(f::SpotFormula) = f.f[:to_str]()
+Base.string(f::SpotFormula) = f.f[:to_str]()
 
 """
     is_eventual(f::SpotFormula)
