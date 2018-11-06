@@ -15,6 +15,16 @@ using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
 
 ## Usage 
 
+### LTL Manipulation
+
+Construct LTL formula using a non standard string literal:
+
+```julia
+f = ltl"FG a -> FG b"
+``` 
+
+The formula will be automatically parsed by Spot.
+
 ### LTL to Automata Translation
 
 ```julia

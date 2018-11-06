@@ -4,7 +4,6 @@ module Spot
 using PyCall
 using Parameters
 
-
 function __init__()
     global spot = pywrap(pyimport("spot"))
 end
@@ -19,7 +18,9 @@ export
     is_eventual,
     is_sugar_free_ltl,
     is_literal,
-    atomic_prop_collect
+    atomic_prop_collect,
+    is_constrained_reachability,
+    @ltl_str
 
 include("formulas.jl")
 

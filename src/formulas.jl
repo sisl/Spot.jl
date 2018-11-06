@@ -2,6 +2,10 @@ struct SpotFormula
     f::PyObject
 end
 
+macro ltl_str(l) 
+    SpotFormula(l)
+end
+
 function SpotFormula(f::AbstractString)
     return SpotFormula(spot.formula(f))
 end
@@ -34,15 +38,17 @@ Whether the formula is an atomic proposition or its negation.
 is_literal(f::SpotFormula) = f.f[:is_literal]()
 
 """
+    is_boolean()
+Whether the formula is boolean 
+"""
+is_boolean(f::SpotFormula) = f.f[:is_boolean]()
+
+"""
     is_constrained_reachability(f::SpotFormula)
 returns true if a formula is of type `a U b`
 """
 function is_constrained_reachability(f::SpotFormula)
-    if !(spot.nesting_depth(f, "U") == 1)
-        return false 
-    end
-    props = atomic_prop_collect(f)
-    # XXX check that the arguments of U are literal
+    return f.f[:_is](spot.op_U) && f.f[1][:is_boolean]() && f.f[2][:is_boolean]()
 end
 
 """
