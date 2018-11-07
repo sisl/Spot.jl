@@ -1,8 +1,5 @@
-using Revise
 using Spot
 using Test
-using LightGraphs
-using MetaGraphs
 
 @testset "LTL Parsing" begin
     f = spot.formula("p1 U p2 R (p3 & !p4)")
