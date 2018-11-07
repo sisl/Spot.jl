@@ -12,7 +12,7 @@ end
 if PyCall.conda
     pyversion = PyCall.pyversion
     run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
-    run(`yes | unzip $SPOT_VERSION.zip`)
+    run(`unzip $SPOT_VERSION.zip`)
     run(`rm $SPOT_VERSION.zip`)
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     mkdir("spot")
