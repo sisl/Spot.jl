@@ -10,6 +10,11 @@ julia:
 # env:
 #   - CONDA_JL_VERSION="3" PYTHON=""
 
+addons:
+  apt:
+    packages:
+    - hdf5-tools
+
 matrix:
   allow_failures:
     - julia: nightly
