@@ -13,8 +13,7 @@ julia:
 addons:
   apt:
     packages:
-    - g++
-    - clang++
+    - g++-5
 
 matrix:
   allow_failures:
