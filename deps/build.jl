@@ -12,20 +12,26 @@ end
 if PyCall.conda
     println("Building Spot from source...")
     pyversion = PyCall.pyversion
-    import Spot
-    cd(joinpath(dirname(pathof(Spot)), "..", "deps"))
+    base = dirname(@__FILE__)
+    println("Switching to directory $base")
+    cd(base)
     run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
     run(`unzip $SPOT_VERSION.zip`)
     run(`rm $SPOT_VERSION.zip`)
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     mkdir("spot")
     cd(SPOT_VERSION)
-    run(`./configure --prefix $(joinpath(dirname(pathof(Spot)), "..", "deps", "spot"))`)
+    run(`./configure --prefix $(base, "spot")`)
     run(`make`)
     run(`make install`)
-    cd("../")
     conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
-    run(`ln -s /spot/lib/python3.6/site-packages $conda_path`)
+    pythonspot = joinpath(base, "spot", "lib", "python3.6", "site-packages")
+    cd(conda_path)
+    run(`ln -s $pythonspot/spot`)
+    run(`ln -s $pythonspot/_buddy.a`)
+    run(`ln -s $pythonspot/_buddy.la`)
+    run(`ln -s $pythonspot/_buddy.so`)
+    run(`ln -s $pythonspot/buddy.py`)
 else
     try
         pyimport("spot")
