@@ -35,7 +35,10 @@ export
     get_edges_labels,
     atomic_propositions,
     label_to_function,
-    parse_fin_inf_sets
+    label_to_array,
+    get_fin_inf_sets,
+    to_generalized_rabin,
+    DeterministicRabinAutomata
 
 include("translator.jl")
 include("automata.jl")

@@ -1,5 +1,5 @@
 import spot
-
+import pdb
 ltl = "(a U b) & GFc & GFd"
 
 f = spot.formula(ltl)
@@ -19,6 +19,7 @@ for i in a.univ_dests(init):
     initial_states.append(i)
 
 # get edges and labels formulas
+
 edges = []
 labels = []
 for s in range(0, a.num_states()):
@@ -28,8 +29,27 @@ for s in range(0, a.num_states()):
         if not ud:
             for dest in a.univ_dests(t):
                 edges.append((int(t.src), int(dest)))
-                labels.append(str(spot.bdd_format_formula(bddict, t.cond)))
+                labels.append(spot.bdd_to_formula(t.cond, bddict))
         
+
+f = labels[2]
+f[1]
+dir(f[1])
+f
+
+f[1].this
+
+f[2].is_literal()
+
+f[2][0]
+
+f[2]._is(spot.op_Not)
+
+f[1].ap_name()
+
+a = f[2].get_child_of(0)
+a
+
 
 # get APs
 aps = [str(ap) for ap in a.ap()] 
@@ -38,6 +58,8 @@ f = type(a.ap()[0])
 
 f.to_str
 dir(f)
+
+
 
 # get acceptance conditions
 acc = a.get_acceptance() # type acc_code
