@@ -20,7 +20,7 @@ end
     a = translate(LTLTranslator(), ltl)
     sa = SpotAutomata(a)
     @test num_states(sa) == 2
-    @test get_init_state_number(sa) == 0 # 0 indexed!
+    @test get_init_state_number(sa) == 1
     @test num_edges(sa) == 6
     @test atomic_propositions(sa) == [:a, :b, :c, :d]
 end

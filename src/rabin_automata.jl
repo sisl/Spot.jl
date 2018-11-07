@@ -19,7 +19,7 @@ end
 # extract a Rabin Automata from an LTL formula using Spot.jl
 function DeterministicRabinAutomata(ltl::AbstractString, 
                                     translator::LTLTranslator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true))
-    aut = SpotAutomata(translate(ltl, translator))
+    aut = SpotAutomata(translate(translator, ltl))
     dra = to_generalized_rabin(aut)
     dra = spot.split_edges(dra)
     @assert is_deterministic(dra)

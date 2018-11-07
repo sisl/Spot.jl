@@ -7,6 +7,7 @@ using LightGraphs
 using MetaGraphs
 
 function __init__()
+    pushfirst!(PyVector(pyimport("sys")["path"]),joinpath(dirname(@__FILE__), "../deps/spot/lib/python3.6/site-packages/spot"))
     global spot = pywrap(pyimport("spot"))
     spot.setup() # for display style
 end
