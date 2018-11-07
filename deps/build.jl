@@ -21,7 +21,7 @@ run(`rm $SPOT_VERSION.zip`)
 run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
 mkdir("spot")
 cd(SPOT_VERSION)
-run(`./configure --prefix $(base, "spot")`)
+run(`./configure --prefix $(joinpath(base, "spot"))`)
 run(`make`)
 run(`make install`)
     # conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
