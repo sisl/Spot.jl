@@ -10,14 +10,17 @@ end
 
 # borrowed from TensorFlow.jl
 if PyCall.conda
+    println("Building Spot from source...")
     pyversion = PyCall.pyversion
+    import Spot
+    cd(joinpath(dirname(pathof(Spot)), "..", "deps"))
     run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
     run(`unzip $SPOT_VERSION.zip`)
     run(`rm $SPOT_VERSION.zip`)
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     mkdir("spot")
     cd(SPOT_VERSION)
-    run(`./configure --prefix $(joinpath(pwd(), "spot"))`)
+    run(`./configure --prefix $(joinpath(dirname(pathof(Spot)), "..", "deps", "spot"))`)
     run(`make`)
     run(`make install`)
     cd("../")
