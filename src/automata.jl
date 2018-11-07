@@ -34,6 +34,15 @@ function to_generalized_rabin(aut::SpotAutomata, split=true)
     return SpotAutomata(spot.to_generalized_rabin(aut.a), split)
 end
 
+function is_deterministic(aut::SpotAutomata)
+    return aut.a[:is_deterministic]()
+end
+
+function split_edges(aut::SpotAutomata)
+    a = spot.split_edges(aut.a)
+    return SpotAutomata(a)
+end
+
 """
     get_edges_labels(aut::SpotAutomata)
 returns a list of edges as pairs (src, dest) and their associated labels as a SpotFormula. 

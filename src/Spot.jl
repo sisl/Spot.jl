@@ -42,6 +42,7 @@ export
     label_to_array,
     get_fin_inf_sets,
     to_generalized_rabin,
+    is_deterministic,
     DeterministicRabinAutomata
 
 include("translator.jl")
