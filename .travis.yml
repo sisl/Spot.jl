@@ -13,7 +13,8 @@ julia:
 addons:
   apt:
     packages:
-    - hdf5-tools
+    - g++
+    - clang++
 
 matrix:
   allow_failures:
