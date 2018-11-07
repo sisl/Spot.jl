@@ -1,7 +1,7 @@
 using PyCall 
 using Conda 
 
-const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21303/artifacts/file/spot-2.6.3.dev.tar.gz"
+const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21303/artifacts/download"
 const SPOT_VERSION = "spot-2.6.3.dev"
 
 if !Sys.isunix()
@@ -11,7 +11,9 @@ end
 # borrowed from TensorFlow.jl
 if PyCall.conda
     pyversion = PyCall.pyversion
-    download(SPOT_DEV_URL, SPOT_VERSION*".tar.gz")
+    run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
+    run(`yes | unzip $SPOT_VERSION.zip`)
+    run(`rm $SPOT_VERSION.zip`)
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     mkdir("spot")
     cd(SPOT_VERSION)
