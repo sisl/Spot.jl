@@ -17,6 +17,7 @@ addons:
     packages:
     - g++-7
     - python3-dev
+    - clang-3.9
 
 matrix:
   allow_failures:
