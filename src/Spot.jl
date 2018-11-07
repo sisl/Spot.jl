@@ -3,9 +3,12 @@ module Spot
 # Package code goes here.
 using PyCall
 using Parameters
+using LightGraphs
+using MetaGraphs
 
 function __init__()
     global spot = pywrap(pyimport("spot"))
+    spot.setup() # for display style
 end
 
 export 
