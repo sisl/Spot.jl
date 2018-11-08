@@ -19,11 +19,12 @@ run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
 run(`unzip $SPOT_VERSION.zip`)
 run(`rm $SPOT_VERSION.zip`)
 run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
-mkdir("spot")
+isfile("spot") ? mkdir("spot") : nothing
 cd(SPOT_VERSION)
 run(`./configure CXX=g++-7 --prefix $(joinpath(base, "spot"))`)
 run(`make`)
 run(`make install`)
+println("build successful")
     # conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
     # pythonspot = joinpath(base, "spot", "lib", "python3.6", "site-packages")
     # cd(conda_path)
