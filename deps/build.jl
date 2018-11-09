@@ -15,7 +15,7 @@ pyversion = PyCall.pyversion
 base = dirname(@__FILE__)
 println("Switching to directory $base")
 cd(base)
-run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
+isfile("$SPOT_VERSION.zip") ? nothing : run(`wget -O $SPOT_VERSION.zip $SPOT_DEV_URL`)
 run(`unzip $SPOT_VERSION.zip`)
 run(`rm $SPOT_VERSION.zip`)
 run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
