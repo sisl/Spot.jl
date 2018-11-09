@@ -32,7 +32,7 @@ before_script:
   # change. This has two effects:
   #   1. it avoids Travis timing out because the build outputs nothing
   #   2. it makes it more obvious what part of the build, if any, gets stuck
-  - while sleep 3; do tail ~/build/sisl/Spot/deps/build.log -f ; done &
+  - while sleep 3; do tail ~/build/sisl/Spot.jl/deps/build.log -f ; done &
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - travis_wait wget -O deps/spot-2.6.3.dev.zip https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21303/artifacts/download
