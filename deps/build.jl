@@ -1,7 +1,8 @@
 using PyCall 
-using Conda 
 
+# const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21743/artifacts/download"
 const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21303/artifacts/download"
+
 const SPOT_VERSION = "spot-2.6.3.dev"
 
 if !Sys.isunix()
@@ -24,6 +25,7 @@ cd(SPOT_VERSION)
 run(`./configure CXX=g++-7 --prefix $(joinpath(base, "spot"))`)
 run(`make`)
 run(`make install`)
+@assert isdir(joinpath(base, "spot"))
 println("build successful")
     # conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
     # pythonspot = joinpath(base, "spot", "lib", "python3.6", "site-packages")
