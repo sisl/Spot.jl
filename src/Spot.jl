@@ -39,7 +39,7 @@ export
     atomic_propositions,
     label_to_function,
     label_to_array,
-    get_fin_inf_sets,
+    get_rabin_acceptance,
     to_generalized_rabin,
     DeterministicRabinAutomata
 

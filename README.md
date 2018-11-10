@@ -13,6 +13,9 @@ It requires the python bindings of spot to be correctly installed and accessible
 using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
 ```
 
+Python dependencies:
+    - IPython (for visualization in jupyter notebook)
+
 ## Usage 
 
 ### LTL Manipulation

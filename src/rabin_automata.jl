@@ -12,14 +12,13 @@ struct DeterministicRabinAutomata <: AbstractAutomata
     states::AbstractVector{Int64}
     transition::MetaGraph{Int64}
     APs::Vector{Symbol}
-    fin_set::Set{Int64}
-    inf_set::Set{Int64}
+    acc_sets::Vector{Tuple{Set{Int64}, Set{Int64}}}
 end
 
 # extract a Rabin Automata from an LTL formula using Spot.jl
 function DeterministicRabinAutomata(ltl::AbstractString, 
-                                    translator::LTLTranslator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true))
-    aut = SpotAutomata(translate(ltl, translator))
+                                    translator::LTLTranslator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptance=true))
+    aut = SpotAutomata(translate(translator, ltl))
     dra = to_generalized_rabin(aut)
     dra = spot.split_edges(dra)
     @assert is_deterministic(dra)
@@ -37,12 +36,16 @@ function DeterministicRabinAutomata(ltl::AbstractString,
     for (e, l) in zip(edges, conditions)
         set_prop!(mg, Edge(e[1], e[2]), :cond, l)
     end
+<<<<<<< Updated upstream
     inf_set, fin_set = parse_inf_fin_sets(dra)
     return DeterministicRabinAutomata(initial_state, states, transition, APs, fin_set, inf_set)
+=======
+    acc_sets = get_inf_fin_sets(dra)
+    return DeterministicRabinAutomata(initial_state, states, transition, APs, acc_sets)
+>>>>>>> Stashed changes
 end
 
 num_states(aut::DeterministicRabinAutomata) = length(aut.states)
 
 get_init_state_number(aut::DeterministicRabinAutomata) = aut.initial_state
-
 

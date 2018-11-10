@@ -88,6 +88,23 @@ function label_to_array(lab::SpotFormula)
 end
 
 """
+Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
+where Fin is a set of states to be visited finitely often and Inf inifinitely often 
+"""
+function get_rabin_acceptance(aut::SpotAutomata)
+    acc = aut.a[:acc]()
+    israbin, acc_sets = acc[:is_rabin_like]()
+    @assert israbin "SpotError: automata is not Rabin like"
+    fin_inf_sets = Vector{Tuple{Set{Int64}, Set{Int64}}}(undef, length(acc_sets))
+    for (i,s) in enumerate(acc_sets)
+        infset = Set(collect(s[:inf][:sets]()))
+        finset = Set(collect(s[:fin][:sets]()))
+        fin_inf_sets[i] = (finset, infset)
+    end
+    return fin_inf_sets
+end
+
+"""
     get_inf_fin_sets(aut::SpotAutomata)
 Given a SpotAutomata, parse the accepting condition and returns
  the set of states that must be visited infinitely often (inf_set)
