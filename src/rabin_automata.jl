@@ -36,13 +36,8 @@ function DeterministicRabinAutomata(ltl::AbstractString,
     for (e, l) in zip(edges, conditions)
         set_prop!(mg, Edge(e[1], e[2]), :cond, l)
     end
-<<<<<<< Updated upstream
-    inf_set, fin_set = parse_inf_fin_sets(dra)
-    return DeterministicRabinAutomata(initial_state, states, transition, APs, fin_set, inf_set)
-=======
     acc_sets = get_inf_fin_sets(dra)
     return DeterministicRabinAutomata(initial_state, states, transition, APs, acc_sets)
->>>>>>> Stashed changes
 end
 
 num_states(aut::DeterministicRabinAutomata) = length(aut.states)
