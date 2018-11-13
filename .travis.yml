@@ -2,19 +2,38 @@
 language: julia
 os:
   - linux
-  - osx
 julia:
   - 1.0
   - nightly
+
+env:
+  - CONDA_JL_VERSION="3" PYTHON=""
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-7
+    - python3-dev
+    - clang-3.9
+
 matrix:
   allow_failures:
     - julia: nightly
   fast_finish: true
+
 notifications:
   email: false
+before_script:
+  # Every 30 seconds, look for the build log file. If it exists, then
+  # start watching its contents and printing them to stdout as they
+  # change. This has two effects:
+  #   1. it avoids Travis timing out because the build outputs nothing
+  #   2. it makes it more obvious what part of the build, if any, gets stuck
+  - while sleep 3; do tail ~/build/sisl/Spot.jl/deps/build.log -f ; done &
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone(pwd()); Pkg.build("Spot"); Pkg.test("Spot"; coverage=true)'
+  - julia --project --color=yes -e 'import Pkg; Pkg.build(); Pkg.test(coverage=true)'
 after_success:
-  - julia -e 'cd(Pkg.dir("Spot")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-  - julia -e 'cd(Pkg.dir("Spot")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+  - julia --project -e 'import Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'

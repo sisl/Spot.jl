@@ -1,7 +1,5 @@
 using Spot
 using Test
-using LightGraphs
-using MetaGraphs
 
 @testset "LTL Parsing" begin
     f = spot.formula("p1 U p2 R (p3 & !p4)")
@@ -25,7 +23,7 @@ end
     a = translate(LTLTranslator(), ltl)
     sa = SpotAutomata(a)
     @test num_states(sa) == 2
-    @test get_init_state_number(sa) == 1 
+    @test get_init_state_number(sa) == 1
     @test num_edges(sa) == 6
     @test atomic_propositions(sa) == [:a, :b, :c, :d]
 end
