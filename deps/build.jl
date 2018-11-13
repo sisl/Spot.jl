@@ -33,7 +33,7 @@ if PyCall.conda
     println("build successful")
     println("Linking python bindings to Conda.jl")
     conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
-    pythonspot = joinpath(base, "spot", "lib", "python3.6", "site-packages")
+    pythonspot = joinpath(base, "spot", "lib","python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
     cd(conda_path)
     run(`ln -sf $pythonspot/spot`)
     run(`ln -sf $pythonspot/_buddy.a`)
