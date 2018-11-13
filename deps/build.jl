@@ -23,13 +23,13 @@ if PyCall.conda
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     isdir("spot") ? mkdir("spot") : nothing
     cd(SPOT_VERSION)
-    run(`./configure CXX=g++-7 --prefix $(joinpath(base, "spot"))`)
+    run(`./configure CXX=g++-7 PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
     run(`make`)
     run(`make install`)
-    println(readdir(base))
+    println(readdir(joinpath(base, "spot", "lib"))
     @assert isdir(joinpath(base, "spot"))
-    @assert isdir(joinpath(base, "spot/lib/python3.6/site-packages"))
-    println("Python bindings located at: ", joinpath(base, "spot/lib/python3.6/site-packages"))
+    @assert isdir(joinpath(base, "spot", "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages"))
+    println("Python bindings located at: ", joinpath(base, "spot", "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages"))
     println("build successful")
     println("Linking python bindings to Conda.jl")
     conda_path = joinpath(Conda.ROOTENV, "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages")
