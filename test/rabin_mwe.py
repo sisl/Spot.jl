@@ -17,14 +17,14 @@ print(" Sets: ", v)
 aut2 = spot.translate('(a U b) & GFc & GFd', 'det', 'sbacc', 'ba')
 acc = aut2.acc()
 print(acc)  # Inf(0)&Inf(1)
-(b, v) = acc.is_rabin_like()
+(b, v) = acc.is_rabin_like() # why is that not rabin?
 print("aut2 is rabin: ", b)
 print(" Sets: ", v)
 dra2 = spot.to_generalized_rabin(aut2)
 acc = dra2.acc()
 print(acc) # Fin(0) & (Inf(1) & Inf(2))
 (b, v) = acc.is_rabin_like()
-print("dra2 is rabin: ", b) #XXX Shouldn't this be true
+print("dra2 is rabin: ", b) #XXX Shouldn't this be true ?
 print(" Sets: ", v) #XXX Shouldn't this be fin={0}, inf=({1},{2})
 
 (b, v) = acc.is_generalized_rabin()

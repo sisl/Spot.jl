@@ -43,8 +43,7 @@ a = translate(translator, ltl)
 ## TODOs
 
 - [ ] Use CXXWrap.jl to avoid relying on a third language (python) and automatically import all the spot functions.
-- [ ] Fix the build script 
-- [ ] Try using BinaryBuilder. A first experiment was not conclusive, the build is failing in the vm provided by BinaryBuilder probably because of a wrong dependencies.
+- [ ] Try using BinaryBuilder. A first experiment was not successful, the path to `libspot.so` in the python bindings is wrong.
 
 ## Acknowledgement 
 
