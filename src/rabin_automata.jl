@@ -16,11 +16,10 @@ struct DeterministicRabinAutomata <: AbstractAutomata
 end
 
 # extract a Rabin Automata from an LTL formula using Spot.jl
-function DeterministicRabinAutomata(ltl::AbstractString, 
-                                    translator::LTLTranslator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true))
+function DeterministicRabinAutomata(ltl::SpotFormula, 
+                                    translator::LTLTranslator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptance=true))
     aut = SpotAutomata(translate(translator, ltl))
     dra = to_generalized_rabin(aut)
-    dra = split_edges(dra)
     @assert is_deterministic(dra)
     states = 1:num_states(dra)
     initial_state = get_init_state_number(dra) 
@@ -36,8 +35,8 @@ function DeterministicRabinAutomata(ltl::AbstractString,
     for (e, l) in zip(edges, conditions)
         set_prop!(transition, Edge(e[1], e[2]), :cond, l)
     end
-    inf_set, fin_set = get_inf_fin_sets(dra)
-    return DeterministicRabinAutomata(initial_state, states, transition, APs, fin_set, inf_set)
+    acc_sets = get_rabin_acceptance(dra)
+    return DeterministicRabinAutomata(initial_state, states, transition, APs, acc_sets)
 end
 
 num_states(aut::DeterministicRabinAutomata) = length(aut.states)
