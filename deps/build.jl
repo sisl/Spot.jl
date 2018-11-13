@@ -26,7 +26,7 @@ if PyCall.conda
     run(`./configure CXX=g++-7 PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
     run(`make`)
     run(`make install`)
-    println(readdir(joinpath(base, "spot", "lib"))
+    println(readdir(joinpath(base, "spot", "lib")))
     @assert isdir(joinpath(base, "spot"))
     @assert isdir(joinpath(base, "spot", "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages"))
     println("Python bindings located at: ", joinpath(base, "spot", "lib", "python"*string(pyversion.major)*"."*string(pyversion.minor), "site-packages"))
