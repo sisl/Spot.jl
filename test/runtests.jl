@@ -10,6 +10,8 @@ using MetaGraphs
     # check properties
     @test f[:is_ltl_formula]()
     f = ltl"p1 U p2 R (p3 & !p4)" # check constructor
+    @test is_reachability(ltl"F reach")
+    @test is_constrained_reachability(ltl"!avoid U reach")
 end
 
 @testset "LTL To Automata" begin 

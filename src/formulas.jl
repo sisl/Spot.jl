@@ -44,6 +44,14 @@ Whether the formula is boolean
 is_boolean(f::SpotFormula) = f.f[:is_boolean]()
 
 """
+    is_reachability(f::SpotFormula)
+returns true if a formula is of type `F a`
+"""
+function is_reachability(f::SpotFormula)
+    return f.f[:_is](spot.op_F) && f.f[1][:is_boolean]()
+end
+
+"""
     is_constrained_reachability(f::SpotFormula)
 returns true if a formula is of type `a U b`
 """

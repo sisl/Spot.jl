@@ -22,6 +22,7 @@ export
     is_sugar_free_ltl,
     is_literal,
     atomic_prop_collect,
+    is_reachability,
     is_constrained_reachability,
     @ltl_str
 
