@@ -13,6 +13,9 @@ It requires the python bindings of spot to be correctly installed and accessible
 using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
 ```
 
+Python dependencies:
+    - IPython (for visualization in jupyter notebook)
+
 ## Usage 
 
 ### LTL Manipulation
@@ -36,3 +39,12 @@ translator = LTLTranslator(deterministic=true)
 a = translate(translator, ltl)
 
 ```
+
+## TODOs
+
+- [ ] Use CXXWrap.jl to avoid relying on a third language (python) and automatically import all the spot functions.
+- [ ] Try using BinaryBuilder. A first experiment was not successful, the path to `libspot.so` in the python bindings is wrong.
+
+## Acknowledgement 
+
+Thanks to Alexandre Duretz-Lutz for all the help provided.
