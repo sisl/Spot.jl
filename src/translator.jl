@@ -32,7 +32,7 @@ translate an LTL formula into an automata
 Options are set using the translator object. More options can be passed as strings.
 See https://spot.lrde.epita.fr/ltl2tgba.html for extra options that are not in LTLTranslator
 """
-function translate(translator::LTLTranslator, ltl::AbstractString, args...)
+function translate(translator::LTLTranslator, ltl::SpotFormula, args...)
     options = String[]
     translator.buchi ? push!(options, "BA") : nothing
     translator.monitor ? push!(options, "monitor") : nothing
@@ -40,5 +40,5 @@ function translate(translator::LTLTranslator, ltl::AbstractString, args...)
     translator.generic ? push!(options, "generic") : nothing 
     translator.parity ? push!(options, "parity") : nothing 
     translator.state_based_acceptance ? push!(options, "sbacc") : nothing 
-    return spot.translate(ltl, options..., args...)
+    return spot.translate(ltl.f, options..., args...)
 end

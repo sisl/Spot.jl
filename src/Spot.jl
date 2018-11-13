@@ -7,7 +7,9 @@ using LightGraphs
 using MetaGraphs
 
 function __init__()
-    pushfirst!(PyVector(pyimport("sys")["path"]),joinpath(dirname(@__FILE__), "../deps/spot/lib/python3.6/site-packages/"))
+    pyversion = PyCall.pyversion
+    pythonspot = "../deps/spot/lib/python"*string(pyversion.major)*"."*string(pyversion.minor)*"/site-packages/"
+    pushfirst!(PyVector(pyimport("sys")["path"]),joinpath(dirname(@__FILE__), pythonspot))
     global spot = pywrap(pyimport("spot"))
     spot.setup() # for display style
 end
@@ -40,7 +42,7 @@ export
     atomic_propositions,
     label_to_function,
     label_to_array,
-    get_fin_inf_sets,
+    get_rabin_acceptance,
     to_generalized_rabin,
     is_deterministic,
     DeterministicRabinAutomata

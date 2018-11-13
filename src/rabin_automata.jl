@@ -12,8 +12,7 @@ struct DeterministicRabinAutomata <: AbstractAutomata
     states::AbstractVector{Int64}
     transition::MetaGraph{Int64}
     APs::Vector{Symbol}
-    fin_set::Set{Int64}
-    inf_set::Set{Int64}
+    acc_sets::Vector{Tuple{Set{Int64}, Set{Int64}}}
 end
 
 # extract a Rabin Automata from an LTL formula using Spot.jl
@@ -44,5 +43,4 @@ end
 num_states(aut::DeterministicRabinAutomata) = length(aut.states)
 
 get_init_state_number(aut::DeterministicRabinAutomata) = aut.initial_state
-
 
