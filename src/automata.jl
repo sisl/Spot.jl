@@ -49,16 +49,9 @@ function get_edges_labels(aut::SpotAutomata)
     bdict = aut.a[:get_dict]()
     edges = Tuple{Int64, Int64}[]
     labels = SpotFormula[]
-    for s=1:num_states(aut)
-        for t in aut.a[:out](s - 1) 
-            ud = aut.a[:is_univ_dest](t)
-            if !ud 
-                for dest in aut.a[:univ_dests](t)
-                    push!(edges, (Int(t[:src]) + 1, Int(dest) + 1))
-                    push!(labels, ((SpotFormula(spot.bdd_to_formula(t[:cond], bdict)))))
-                end
-            end
-        end
+    for e in aut.a[:edges]()
+        push!(edges, (e[:src] + 1, e[:dst] + 1))
+        push!(labels,  ((SpotFormula(spot.bdd_to_formula(e[:cond], bdict)))))
     end
     return edges, labels 
 end

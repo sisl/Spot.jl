@@ -2,6 +2,42 @@ import spot
 import pdb
 ltl = "(a U b) & GFc & GFd"
 
+
+safety = spot.formula("!a U b")
+safety_aut = spot.translate(safety, "deterministic", "BA", "sbacc")
+ra = spot.to_generalized_rabin(safety_aut)
+ra = spot.split_edges(ra)
+
+def get_edges_labels(a):
+    bddict = a.get_dict()
+    edges = []
+    labels = []
+    for s in range(0, a.num_states()):
+        print("State :{}".format(s))
+        for t in a.out(s):
+            ud = a.is_univ_dest(t)
+            if not ud:
+                for dest in a.univ_dests(t):
+                    print("adding edge {}".format((int(t.src), int(dest))))
+                    print("with label {}".format(spot.bdd_to_formula(t.cond, bddict)))
+                    edges.append((int(t.src), int(dest)))
+                    labels.append(spot.bdd_to_formula(t.cond, bddict))
+
+edges, labels = get_edges_labels(ra)
+
+for e in ra.edges():
+    print("edge {}".format((int(e.src), int(e.dst))))
+
+edge_list = [e for e in ra.edges()]
+
+e = edge_list[0]
+dir(e)
+
+e.src
+e.dst
+e.cond
+spot.bdd_to_formula(e.cond, ra.get_dict())
+
 f = spot.formula(ltl)
 
 dir(f)
@@ -20,16 +56,7 @@ for i in a.univ_dests(init):
 
 # get edges and labels formulas
 
-edges = []
-labels = []
-for s in range(0, a.num_states()):
-    print("State :{}".format(s))
-    for t in a.out(s):
-        ud = a.is_univ_dest(t)
-        if not ud:
-            for dest in a.univ_dests(t):
-                edges.append((int(t.src), int(dest)))
-                labels.append(spot.bdd_to_formula(t.cond, bddict))
+
         
 
 f = labels[2]

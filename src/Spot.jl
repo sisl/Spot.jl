@@ -33,7 +33,11 @@ include("formulas.jl")
 
 export
     LTLTranslator,
-    translate,
+    translate
+
+include("translator.jl")
+
+export
     AbstractAutomata,
     SpotAutomata,
     num_states,
@@ -46,9 +50,9 @@ export
     get_rabin_acceptance,
     to_generalized_rabin,
     is_deterministic,
-    DeterministicRabinAutomata
+    DeterministicRabinAutomata,
+    nextstate
 
-include("translator.jl")
 include("automata.jl")
 include("rabin_automata.jl")
 

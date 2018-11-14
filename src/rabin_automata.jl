@@ -10,7 +10,7 @@ Datastructure representing a deterministic Rabin Automata. It is parameterized b
 struct DeterministicRabinAutomata <: AbstractAutomata
     initial_state::Int64
     states::AbstractVector{Int64}
-    transition::MetaGraph{Int64}
+    transition::MetaDiGraph{Int64}
     APs::Vector{Symbol}
     acc_sets::Vector{Tuple{Set{Int64}, Set{Int64}}}
 end
@@ -24,16 +24,20 @@ function DeterministicRabinAutomata(ltl::SpotFormula,
     states = 1:num_states(dra)
     initial_state = get_init_state_number(dra) 
     APs = atomic_propositions(dra)
-    edges, labels = get_edges_labels(dra)
+    edgelist, labels = get_edges_labels(dra)
     sdg = SimpleDiGraph(num_states(dra))
-    for e in edges
+    for e in edgelist
         add_edge!(sdg, e)
     end
-    transition = MetaGraph(sdg)
+    transition = MetaDiGraph(sdg)
     conditions = label_to_array.(labels)
     conditions = broadcast(x -> tuple(x...), conditions)
-    for (e, l) in zip(edges, conditions)
-        set_prop!(transition, Edge(e[1], e[2]), :cond, l)
+    for (e, l) in zip(edgelist, conditions)
+        if haskey(props(transition, Edge(e...)), :cond)
+            push!(props(transition, Edge(e...))[:cond], l)
+        else
+            set_prop!(transition, Edge(e...), :cond, Set{Tuple{Vararg{Symbol,N} where N}}([l]))
+        end
     end
     acc_sets = get_rabin_acceptance(dra)
     return DeterministicRabinAutomata(initial_state, states, transition, APs, acc_sets)
@@ -43,3 +47,16 @@ num_states(aut::DeterministicRabinAutomata) = length(aut.states)
 
 get_init_state_number(aut::DeterministicRabinAutomata) = aut.initial_state
 
+get_rabin_acceptance(aut::DeterministicRabinAutomata) = aut.acc_sets
+
+function nextstate(dra::DeterministicRabinAutomata, q::Int64, lab::NTuple{N,Symbol}) where N
+    next_states = neighbors(dra.transition, q)
+    edge_it = filter_edges(dra.transition, (g, e) -> (src(e) == q) && (lab ∈ props(g, e)[:cond]))
+    edge_list = collect(edge_it)
+    if isempty(edge_list)
+        return nothing
+    else
+        @assert length(edge_list) == 1
+        return dst(first(edge_list))
+    end 
+end
