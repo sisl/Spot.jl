@@ -4,7 +4,16 @@ using Spot
 surveillance = ltl"G (F (a & (F (b & Fc))))" 
 safety = ltl"!a U b"
 
-dra = DeterministicRabinAutomata(safety)
+surveillance = ltl"G F a"
+
+dra = DeterministicRabinAutomata(surveillance)
+
+translator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptance=true)
+aut = SpotAutomata(translate(translator, safety))
+dra = to_generalized_rabin(aut)
+
+
+
 
 q0 = get_init_state_number(dra)
 

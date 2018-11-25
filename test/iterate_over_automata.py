@@ -23,12 +23,45 @@ def get_edges_labels(a):
                     edges.append((int(t.src), int(dest)))
                     labels.append(spot.bdd_to_formula(t.cond, bddict))
 
+
 edges, labels = get_edges_labels(ra)
 
 for e in ra.edges():
     print("edge {}".format((int(e.src), int(e.dst))))
 
 edge_list = [e for e in ra.edges()]
+
+## Acceptance sets
+aut = spot.translate('G F a', 'parity min odd', 'det', 'sbacc')
+dra = spot.to_generalized_rabin(aut)
+acc = dra.acc()
+print(acc)
+aut.num_states()
+(b, v) = acc.is_rabin_like()
+print(dra.to_str())
+
+accset = v[0].inf
+for s in range(0, dra.num_states()):
+    if dra.state_acc_sets(s) == accset:
+        print(s)
+
+
+print(dra.state_acc_sets(1).sets())
+print(accset)
+print(v[0].fin)
+
+dra.state_acc_sets(1) == v[0].inf
+
+dir(dra)
+type(accset)
+
+type(dra.state_acc_sets(0))
+
+v[0].fin
+
+print(b, v)
+
+
 
 e = edge_list[0]
 dir(e)

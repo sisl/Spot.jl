@@ -1,4 +1,4 @@
-import sys
+import  sys
 sys.path.append("/mnt/c/Users/Maxime/wsl/.julia/dev/Spot/deps/spot/lib/python3.6/site-packages/")
 
 import spot 
@@ -30,3 +30,23 @@ print(" Sets: ", v) #XXX Shouldn't this be fin={0}, inf=({1},{2})
 (b, v) = acc.is_generalized_rabin()
 print("dra2 is generalized rabin: ", b)
 print(" Sets: ", v)
+
+##
+aut = spot.translate('GF a', 'det', 'ba')
+acc = aut.acc()
+acc.is_rabin_like()
+dra = spot.to_generalized_rabin(aut)
+acc = dra.acc()
+print(acc)
+(b, v) = acc.is_generalized_rabin()
+acc.is_rabin_like()
+
+
+## 
+aut = spot.translate('G F a', 'parity min odd', 'det', 'sbacc')
+dra = spot.to_generalized_rabin(aut)
+acc = dra.acc()
+print(acc)
+aut.num_states()
+(b, v) = acc.is_rabin_like()
+print(b, v)

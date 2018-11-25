@@ -94,9 +94,19 @@ function get_rabin_acceptance(aut::SpotAutomata)
     @assert israbin "SpotError: automata is not Rabin like"
     fin_inf_sets = Vector{Tuple{Set{Int64}, Set{Int64}}}(undef, length(acc_sets))
     for (i,s) in enumerate(acc_sets)
+        stateinfset = Set{Int64}()
+        statefinset = Set{Int64}()
         infset = Set(collect(s[:inf][:sets]()))
         finset = Set(collect(s[:fin][:sets]()))
-        fin_inf_sets[i] = (finset, infset)
+        for state in 1:aut.a[:num_states]()
+            stateset = Set(collect(aut.a[:state_acc_sets](state - 1)[:sets]()))
+            if !isempty(intersect(infset,stateset))
+                push!(stateinfset, state)
+            elseif !isempty(intersect(finset, stateset))
+                push!(statefinset, state)
+            end
+        end
+        fin_inf_sets[i] = (statefinset, stateinfset)
     end
     return fin_inf_sets
 end

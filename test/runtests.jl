@@ -34,4 +34,5 @@ end
     @test get_init_state_number(dra) == 2
     @test nextstate(dra, 2, (:a, :b)) == 1
     @test nextstate(dra, 2, ()) == 2
+    @test dra.acc_sets == [(Set([]), Set([1]))]
 end
