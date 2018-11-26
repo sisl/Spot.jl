@@ -76,6 +76,13 @@ The outputs is the list of AP that are true in the input formula
 function label_to_array(lab::SpotFormula)
     @assert is_boolean(lab)
     positive_ap = Symbol[]
+    if length(lab.f) <= 1 
+        if !lab.f[:_is](spot.op_Not) 
+            push!(positive_ap, Symbol(lab.f[:ap_name]()))
+        else
+            return positive_ap
+        end
+    end
     for ap in lab.f 
         if !ap[:_is](spot.op_Not)
             push!(positive_ap, Symbol(ap[:ap_name]()))
