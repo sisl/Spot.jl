@@ -56,7 +56,7 @@ function nextstate(dra::DeterministicRabinAutomata, q::Int64, lab::NTuple{N,Symb
     if isempty(edge_list)
         return nothing
     else
-        @assert length(edge_list) == 1
+        @assert length(edge_list) == 1 "from state $q with label $lab"
         return dst(first(edge_list))
     end 
 end
