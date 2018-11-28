@@ -24,6 +24,7 @@ export
     is_eventual,
     is_sugar_free_ltl,
     is_literal,
+    is_boolean,
     atomic_prop_collect,
     is_reachability,
     is_constrained_reachability,

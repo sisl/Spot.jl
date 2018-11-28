@@ -63,4 +63,4 @@ end
     atomic_prop_collect(f::SpotFormula)
 returns the list of atomic propositions in f
 """
-atomic_prop_collect(f::SpotFormula) = [Symbol(ap[:to_str()]) for ap in spot.atomic_prop_collect(f.f)]
+atomic_prop_collect(f::SpotFormula) = [Symbol(ap[:to_str]()) for ap in spot.atomic_prop_collect(f.f)]

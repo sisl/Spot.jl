@@ -1,5 +1,7 @@
 using Revise
 using Spot 
+using LightGraphs
+using MetaGraphs
 
 surveillance = ltl"G (F (a & (F (b & Fc))))" 
 safety = ltl"!a U b"
@@ -12,8 +14,54 @@ translator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptanc
 aut = SpotAutomata(translate(translator, safety))
 dra = to_generalized_rabin(aut)
 
+avoid = ltl"F!c"
+
+dra = DeterministicRabinAutomata(avoid)
+aut = spot.split_edges(spot.to_generalized_rabin(translate(translator, avoid)))
 
 
+for e in edges(dra.transition)
+    println(e)
+end
+
+props(dra.transition, Edge(2,2))[:cond]
+
+nextstate(dra, 2, ())
+
+
+
+edgelist, labels = get_edges_labels(SpotAutomata(aut))
+
+conditions = label_to_array.(labels)
+
+lab = labels[end]
+
+
+
+label_to_array(lab)
+
+lab.f[:ap_name]()
+
+collect(ap for ap in lab.f)
+
+for ap in lab.f
+    println(ap)
+end
+
+lab.f[:_is](spot.op_Not)
+
+length(lab.f)
+
+labs = ltl"!a & !c"
+
+length(labs.f)
+
+dra 
+
+acc = aut.a[:acc]()
+israbin, acc_sets = acc[:is_rabin_like]()
+
+s = acc_sets[1]
 
 q0 = get_init_state_number(dra)
 
