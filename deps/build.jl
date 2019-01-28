@@ -25,7 +25,7 @@ if PyCall.conda
     isdir("spot") ? mkdir("spot") : nothing
     cd(SPOT_VERSION)
     if GCC_MAJOR_VERSION < 5
-        throw("g++ version must be at least 5.0.0")
+        println("g++ version must be at least 5.0.0")
     end
     run(`./configure CXX=g++-7 PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
     run(`make`)
