@@ -40,6 +40,11 @@ a = translate(translator, ltl)
 
 ```
 
+### Tutorial 
+
+A basic tutorial is available in [docs/spot_basic_tutorial.ipynb](https://github.com/sisl/Spot.jl/blob/master/docs/spot_basic_tutorial.ipynb) 
+
+
 ## TODOs
 
 - [ ] Use CXXWrap.jl to avoid relying on a third language (python) and automatically import all the spot functions.
