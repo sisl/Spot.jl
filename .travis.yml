@@ -32,6 +32,7 @@ before_script:
   #   1. it avoids Travis timing out because the build outputs nothing
   #   2. it makes it more obvious what part of the build, if any, gets stuck
   - while sleep 3; do tail ~/build/sisl/Spot.jl/deps/build.log -f ; done &
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia --project --color=yes -e 'import Pkg; Pkg.build(); Pkg.test(coverage=true)'
