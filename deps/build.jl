@@ -23,7 +23,7 @@ if PyCall.conda
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     isdir("spot") ? mkdir("spot") : nothing
     cd(SPOT_VERSION)
-    run(`./configure CXX=g++-7 PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
+    run(`./configure CXX=g++ PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
     run(`make`)
     run(`make install`)
     println(readdir(joinpath(base, "spot", "lib")))
