@@ -5,6 +5,7 @@ const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21743/artifa
 # const SPOT_DEV_URL = "https://gitlab.lrde.epita.fr/spot/spot/-/jobs/21303/artifacts/download"
 
 const SPOT_VERSION = "spot-2.6.3.dev"
+const GCC_MAJOR_VERSION = parse(Int,Char(read(`g++ -dumpversion | cut -f1 -d.`)[1])) # get g++ major version
 
 if !Sys.isunix()
     throw("Windows not supported")
@@ -23,6 +24,9 @@ if PyCall.conda
     run(`tar -xzf $SPOT_VERSION.tar.gz`) # extract
     isdir("spot") ? mkdir("spot") : nothing
     cd(SPOT_VERSION)
+    if GCC_MAJOR_VERSION < 5
+        println("g++ version must be at least 5.0.0")
+    end
     run(`./configure CXX=g++-7 PYTHON=$(Conda.PYTHONDIR)/python --prefix $(joinpath(base, "spot"))`)
     run(`make`)
     run(`make install`)
