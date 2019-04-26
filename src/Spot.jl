@@ -6,11 +6,14 @@ using Parameters
 using LightGraphs
 using MetaGraphs
 
+const spot = PyNULL()
+
 function __init__()
     pyversion = PyCall.pyversion
     pythonspot = "../deps/spot/lib/python"*string(pyversion.major)*"."*string(pyversion.minor)*"/site-packages/"
-    pushfirst!(PyVector(pyimport("sys")["path"]),joinpath(dirname(@__FILE__), pythonspot))
-    global spot = pywrap(pyimport("spot"))
+    pushfirst!(PyVector(pyimport("sys").path),joinpath(dirname(@__FILE__), pythonspot))
+    # global spot = pyimport("spot")
+    copy!(spot, pyimport("spot"))
     spot.setup() # for display style
 end
 

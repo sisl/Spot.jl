@@ -4,9 +4,9 @@ using Test
 @testset "LTL Parsing" begin
     f = spot.formula("p1 U p2 R (p3 & !p4)")
     # convert formula to string
-    @test f[:to_str]() == "p1 U (p2 R (p3 & !p4))"
+    @test f.to_str() == "p1 U (p2 R (p3 & !p4))"
     # check properties
-    @test f[:is_ltl_formula]()
+    @test f.is_ltl_formula()
     f = ltl"p1 U p2 R (p3 & !p4)" # check constructor
     @test is_ltl_formula(f)
     @test is_eventual(ltl"F a")

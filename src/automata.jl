@@ -15,19 +15,19 @@ function SpotAutomata(a::PyObject, split::Bool)
 end
 
 function num_states(aut::SpotAutomata)
-    return aut.a[:num_states]()
+    return aut.a.num_states()
 end
 
 function get_init_state_number(aut::SpotAutomata)
-    return aut.a[:get_init_state_number]() + 1
+    return aut.a.get_init_state_number() + 1
 end
 
 function num_edges(aut::SpotAutomata)
-    return aut.a[:num_edges]()
+    return aut.a.num_edges()
 end
 
 function atomic_propositions(aut::SpotAutomata)
-    return [Symbol(a[:to_str]()) for a in aut.a[:ap]()]
+    return [Symbol(a.to_str()) for a in aut.a.ap()]
 end
 
 function to_generalized_rabin(aut::SpotAutomata, split=true)
@@ -35,7 +35,7 @@ function to_generalized_rabin(aut::SpotAutomata, split=true)
 end
 
 function is_deterministic(aut::SpotAutomata)
-    return aut.a[:is_deterministic]()
+    return aut.a.is_deterministic()
 end
 
 """
@@ -46,12 +46,12 @@ See spot.split_edges documentation for more information.
 This is inspired from https://spot.lrde.epita.fr/tut24.html
 """
 function get_edges_labels(aut::SpotAutomata)
-    bdict = aut.a[:get_dict]()
+    bdict = aut.a.get_dict()
     edges = Tuple{Int64, Int64}[]
     labels = SpotFormula[]
-    for e in aut.a[:edges]()
-        push!(edges, (e[:src] + 1, e[:dst] + 1))
-        push!(labels,  ((SpotFormula(spot.bdd_to_formula(e[:cond], bdict)))))
+    for e in aut.a.edges()
+        push!(edges, (e.src + 1, e.dst + 1))
+        push!(labels,  ((SpotFormula(spot.bdd_to_formula(e.cond, bdict)))))
     end
     return edges, labels 
 end
@@ -77,15 +77,15 @@ function label_to_array(lab::SpotFormula)
     @assert is_boolean(lab)
     positive_ap = Symbol[]
     if length(lab.f) <= 1 
-        if !lab.f[:_is](spot.op_Not) 
-            push!(positive_ap, Symbol(lab.f[:ap_name]()))
+        if !lab.f._is(spot.op_Not) 
+            push!(positive_ap, Symbol(lab.f.ap_name()))
         else
             return positive_ap
         end
     end
     for ap in lab.f 
-        if !ap[:_is](spot.op_Not)
-            push!(positive_ap, Symbol(ap[:ap_name]()))
+        if !ap._is(spot.op_Not)
+            push!(positive_ap, Symbol(ap.ap_name()))
         end
     end
     return positive_ap
@@ -96,17 +96,17 @@ Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
 where Fin is a set of states to be visited finitely often and Inf inifinitely often 
 """
 function get_rabin_acceptance(aut::SpotAutomata)
-    acc = aut.a[:acc]()
-    israbin, acc_sets = acc[:is_rabin_like]()
+    acc = aut.a.acc()
+    israbin, acc_sets = acc.is_rabin_like()
     @assert israbin "SpotError: automata is not Rabin like"
     fin_inf_sets = Vector{Tuple{Set{Int64}, Set{Int64}}}(undef, length(acc_sets))
     for (i,s) in enumerate(acc_sets)
         stateinfset = Set{Int64}()
         statefinset = Set{Int64}()
-        infset = Set(collect(s[:inf][:sets]()))
-        finset = Set(collect(s[:fin][:sets]()))
-        for state in 1:aut.a[:num_states]()
-            stateset = Set(collect(aut.a[:state_acc_sets](state - 1)[:sets]()))
+        infset = Set(collect(s.inf.sets()))
+        finset = Set(collect(s.fin.sets()))
+        for state in 1:aut.a.num_states()
+            stateset = Set(collect(aut.a.state_acc_sets(state - 1).sets()))
             if !isempty(intersect(infset,stateset))
                 push!(stateinfset, state)
             elseif !isempty(intersect(finset, stateset))
@@ -127,7 +127,7 @@ Given a SpotAutomata, parse the accepting condition and returns
 function get_inf_fin_sets(aut::SpotAutomata)
     inf_set=Set{Int64}()
     fin_set =Set{Int64}()
-    l = aut.a[:get_acceptance]()[:__str__]() #XXX hack
+    l = aut.a.get_acceptance().__str__() #XXX hack
     inf_set = Set{Int64}()
     for m in eachmatch(r"Inf\(\d+\)", l)
         push!(inf_set, parse(Int64, match(r"\d+",m.match).match))
