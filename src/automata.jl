@@ -77,7 +77,9 @@ function label_to_array(lab::SpotFormula)
     @assert is_boolean(lab)
     positive_ap = Symbol[]
     if length(lab.f) <= 1 
-        if !lab.f._is(spot.op_Not) 
+        if lab.f.is_tt()
+            push!(positive_ap, Symbol(:true_constant))
+        elseif !lab.f._is(spot.op_Not) 
             push!(positive_ap, Symbol(lab.f.ap_name()))
         else
             return positive_ap
