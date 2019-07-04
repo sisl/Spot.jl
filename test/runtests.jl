@@ -1,6 +1,7 @@
 using Spot
 using Test
 using NBInclude
+using TikzPictures
 
 @testset "LTL Parsing" begin
     f = spot.formula("p1 U p2 R (p3 & !p4)")
@@ -49,4 +50,11 @@ end
 
 @testset "doc" begin 
     @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
+end
+
+@testset "save plot" begin
+    ltl = ltl"(a U b) & GFc & GFd"
+    a = translate(LTLTranslator(), ltl)
+    p = Spot.plot(a)
+    save(PDF("test"), p)
 end
