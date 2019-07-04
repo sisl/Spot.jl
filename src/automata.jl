@@ -140,3 +140,35 @@ function get_inf_fin_sets(aut::SpotAutomata)
     end    
     return (inf_set, fin_set)
 end
+
+## Rendering
+
+function plot(aut::SpotAutomata)
+    autdot = aut.a.to_str(format="dot");
+    texstr = mktempdir() do path
+        dotfile = joinpath(path, "graph.dot")
+        open(dotfile, "w") do f
+            write(f, autdot)
+        end
+        xdotfile = joinpath(path, "graph.xdot")
+        run(pipeline(`dot -Txdot $dotfile `, stdout=xdotfile))
+        texfile = joinpath(path, "graph.tex")
+        run(`dot2tex -tmath --figonly $xdotfile -o $texfile`)
+
+        # a bit hacky, replace the logical characters by latex command
+        texstr = open(texfile) do f
+            texstr = read(f, String)
+            texstr = replace(texstr, "&" => " \\land ")
+            texstr = replace(texstr, "!" => " \\lnot ")
+            texstr = replace(texstr, "|" => "\\lor")
+    #         texstr = replace(texstr, "\$[Büchi]\$" => "[B\\\"uchi]")
+        end
+
+        return texstr
+    end
+    return TikzPicture(texstr, preamble="\n\\usepackage{amsmath,amsfonts,amssymb}\n\\usetikzlibrary{snakes,arrows,shapes}")
+end
+
+function Base.show(f::IO, a::MIME"image/svg+xml", aut::SpotAutomata)
+ 	show(f, a, plot(aut))
+end

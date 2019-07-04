@@ -5,6 +5,7 @@ using PyCall
 using Parameters
 using LightGraphs
 using MetaGraphs
+using TikzPictures
 
 const spot = PyNULL()
 
@@ -36,12 +37,6 @@ export
 include("formulas.jl")
 
 export
-    LTLTranslator,
-    translate
-
-include("translator.jl")
-
-export
     AbstractAutomata,
     SpotAutomata,
     num_states,
@@ -53,11 +48,20 @@ export
     label_to_array,
     get_rabin_acceptance,
     to_generalized_rabin,
-    is_deterministic,
+    is_deterministic
+
+include("automata.jl")
+
+export
+    LTLTranslator,
+    translate
+
+include("translator.jl")
+
+export
     DeterministicRabinAutomata,
     nextstate
 
-include("automata.jl")
 include("rabin_automata.jl")
 
 end # module spot

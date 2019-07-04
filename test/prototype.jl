@@ -3,6 +3,28 @@ using Spot
 using LightGraphs
 using MetaGraphs
 
+## Get dot string 
+translator = LTLTranslator(state_based_acceptance=true)
+aut = translate(translator, ltl"! c U a & !c U b");
+
+autdot = aut.to_str(format="dot");
+
+
+texstr = mktempdir() do path
+    dotfile = joinpath(path, "graph.dot")
+    open(dotfile, "w") do f
+        write(f, autdot)
+    end
+    xdotfile = joinpath(path, "graph.xdot")
+    run(pipeline(`dot -Txdot $dotfile`, stdout=xdotfile))
+    texstr = read(run(`dot2tex $xdotfile`), String)
+end
+
+using TikzPictures
+
+run(`dot -Txdot test.dot | dot2tex > test.tex`)
+
+
 surveillance = ltl"G (F (a & (F (b & Fc))))" 
 safety = ltl"!a U b"
 

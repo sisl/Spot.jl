@@ -1,5 +1,6 @@
 using Spot
 using Test
+using NBInclude
 
 @testset "LTL Parsing" begin
     f = spot.formula("p1 U p2 R (p3 & !p4)")
@@ -29,8 +30,8 @@ end
 @testset "SpotAutomata" begin
     ltl = ltl"(a U b) & GFc & GFd"
     a = translate(LTLTranslator(), ltl)
-    sa = SpotAutomata(a)
-    @test sa == SpotAutomata(a, false)
+    sa = SpotAutomata(a.a)
+    @test sa == SpotAutomata(a.a, false)
     @test num_states(sa) == 2
     @test get_init_state_number(sa) == 1
     @test num_edges(sa) == 6
@@ -44,4 +45,8 @@ end
     @test nextstate(dra, 2, (:a, :b)) == 1
     @test nextstate(dra, 2, ()) == 2
     @test dra.acc_sets == [(Set([]), Set([1]))]
+end
+
+@testset "doc" begin 
+    @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
 end
