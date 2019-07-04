@@ -28,6 +28,12 @@ matrix:
 notifications:
   email: false
 before_script:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y pdf2svg
+  - sudo apt-get install -y texlive-latex-base
+  - sudo apt-get install -y texlive-binaries
+  - sudo apt-get install -y texlive-pictures
+  - sudo apt-get install -y texlive-latex-extra
   # Every 30 seconds, look for the build log file. If it exists, then
   # start watching its contents and printing them to stdout as they
   # change. This has two effects:
