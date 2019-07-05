@@ -9,6 +9,8 @@ It requires the python bindings of spot to be correctly installed and accessible
 
 ## Installation 
 
+For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed.
+
 ```julia
 using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
 ```
