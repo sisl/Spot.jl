@@ -64,3 +64,5 @@ end
 returns the list of atomic propositions in f
 """
 atomic_prop_collect(f::SpotFormula) = [Symbol(ap.to_str()) for ap in spot.atomic_prop_collect(f.f)]
+
+Base.show(io::IO, m::MIME{Symbol("text/latex")}, f::SpotFormula) = show(io, m, f.f)

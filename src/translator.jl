@@ -40,5 +40,5 @@ function translate(translator::LTLTranslator, ltl::SpotFormula, args...)
     translator.generic ? push!(options, "generic") : nothing 
     translator.parity ? push!(options, "parity") : nothing 
     translator.state_based_acceptance ? push!(options, "sbacc") : nothing 
-    return spot.translate(ltl.f, options..., args...)
+    return SpotAutomata(spot.translate(ltl.f, options..., args...))
 end
