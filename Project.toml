@@ -9,9 +9,11 @@ LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
 MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 
 [extras]
+NBInclude = "0db19996-df87-5ea3-a455-e3a50d440464"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["NBInclude", "Test"]
