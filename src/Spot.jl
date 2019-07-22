@@ -1,25 +1,23 @@
+__precompile__(false)
 module Spot
 
-# Package code goes here.
-using PyCall
-using Parameters
-using LightGraphs
-using MetaGraphs
-using TikzPictures
+using Cxx
+using Libdl
 
-const spot = PyNULL()
+const path_to_lib = joinpath(@__DIR__, "..", "deps", "usr", "lib", "libspot.so")
+const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
 
 function __init__()
-    pyversion = PyCall.pyversion
-    pythonspot = "../deps/spot/lib/python"*string(pyversion.major)*"."*string(pyversion.minor)*"/site-packages/"
-    pushfirst!(PyVector(pyimport("sys").path),joinpath(dirname(@__FILE__), pythonspot))
-    # global spot = pyimport("spot")
-    copy!(spot, pyimport("spot"))
-    spot.setup() # for display style
+    addHeaderDir(path_to_header, kind=C_System)
+    Libdl.dlopen(path_to_lib, Libdl.RTLD_GLOBAL)
+    
+    cxx"#include <iostream>"
+    cxx"#include <vector>"
+    cxx"#include <spot/tl/formula.hh>"
+    cxx"#include <spot/tl/parse.hh>"
+    cxx"#include <spot/tl/print.hh>"
+    cxx"#include <spot/tl/apcollect.hh>"
 end
-
-export 
-    spot
 
 export
     SpotFormula,
@@ -36,32 +34,32 @@ export
 
 include("formulas.jl")
 
-export
-    AbstractAutomata,
-    SpotAutomata,
-    num_states,
-    num_edges,
-    get_init_state_number,
-    get_edges_labels,
-    atomic_propositions,
-    label_to_function,
-    label_to_array,
-    get_rabin_acceptance,
-    to_generalized_rabin,
-    is_deterministic
+# export
+#     AbstractAutomata,
+#     SpotAutomata,
+#     num_states,
+#     num_edges,
+#     get_init_state_number,
+#     get_edges_labels,
+#     atomic_propositions,
+#     label_to_function,
+#     label_to_array,
+#     get_rabin_acceptance,
+#     to_generalized_rabin,
+#     is_deterministic
 
-include("automata.jl")
+# include("automata.jl")
 
-export
-    LTLTranslator,
-    translate
+# export
+#     LTLTranslator,
+#     translate
 
-include("translator.jl")
+# include("translator.jl")
 
-export
-    DeterministicRabinAutomata,
-    nextstate
+# export
+#     DeterministicRabinAutomata,
+#     nextstate
 
-include("rabin_automata.jl")
+# include("rabin_automata.jl")
 
 end # module spot

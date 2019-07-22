@@ -1,19 +1,55 @@
+# Just for prototyping!
 using Cxx
 using Libdl
 
-const path_to_lib = "/mnt/c/Users/Maxime/wsl/.julia/dev/Spot/deps/spot/lib"
-const path_to_header = "/mnt/c/Users/Maxime/wsl/.julia/dev/Spot/deps/spot/include"
+const path_to_lib = joinpath(@__DIR__, "deps", "usr", "lib", "libspot.so")
+const path_to_header = joinpath(@__DIR__, "deps", "usr", "include")
 addHeaderDir(path_to_header, kind=C_System)
-Libdl.dlopen(path_to_lib * "/libspot.so", Libdl.RTLD_GLOBAL)
+Libdl.dlopen(path_to_lib, Libdl.RTLD_GLOBAL)
+
+struct SpotFormula
+    f::Cxx.CxxCore.CppValue
+end
 
 cxx"#include <iostream>"
+cxx"#include <vector>"
+cxx"#include <spot/tl/formula.hh>"
 cxx"#include <spot/tl/parse.hh>"
+cxx"#include <spot/tl/print.hh>"
+cxx"#include <spot/tl/apcollect.hh>"
+
+f = @cxx spot::parse_formula(pointer("FGa"))
+f = SpotFormula(f)
+
+@cxx f.f -> is_eventual()
+is_ltl_formula(f::SpotFormula) = @cxx f.f -> is_ltl_formula()
+
+
+icxx"$f.is(spot::op::G);"
+
+sap = @cxx spot::atomic_prop_collect(f)
+
+vap = icxx"""
+    std::vector<spot::formula> v($sap->begin(), $sap->end());
+    v;
+"""
+
+function atomic_prop_collect(f)
+    icxx"std::vector<spot::formula> v($sap -> begin(), $sap -> end());"
+end
+
+
+sf = icxx"str_psl($f);";
+
+String(@cxx spot::str_psl(f))
+
+icxx"std::cout << $f << '\n';";
+
 cxx"#include <spot/twaalgos/translate.hh>"
 cxx"#include <spot/twaalgos/dot.hh>"
 cxx"#include <spot/twaalgos/isdet.hh>"
 # cxx"#include <spot/twaalgos/hoa.hh>"
 
-f = @cxx spot::parse_formula(pointer("FGa"))
 
 @cxx f -> is_sugar_free_ltl()
 

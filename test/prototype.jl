@@ -1,7 +1,22 @@
 using Revise
 using Spot 
-using LightGraphs
-using MetaGraphs
+# using LightGraphs
+# using MetaGraphs
+
+## formula 
+
+f = ltl"F reach"
+
+is_reachability(ltl"F reach")
+
+atomic_prop_collect(f)
+
+function isreachability(f::SpotFormula)
+    icxx"""
+        spot::formula ff = $(f.f);
+        ff.is(spot::op::F) && ff[0].is_boolean();
+    """
+end
 
 ## Get dot string 
 translator = LTLTranslator(state_based_acceptance=true)
