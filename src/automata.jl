@@ -3,10 +3,9 @@
 abstract type AbstractAutomata end 
 
 struct SpotAutomata <: AbstractAutomata
-    a::PyObject
-end
+    a::Cxx.CxxCore.CppValue
 
-function SpotAutomata(a::PyObject, split::Bool)
+function SpotAutomata(a::Cxx.CxxCore.CppValue, split::Bool)
     if split
         return SpotAutomata(spot.split_edges(a))
     else

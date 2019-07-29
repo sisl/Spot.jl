@@ -13,10 +13,17 @@ function __init__()
     
     cxx"#include <iostream>"
     cxx"#include <vector>"
+
+    # formula
     cxx"#include <spot/tl/formula.hh>"
     cxx"#include <spot/tl/parse.hh>"
     cxx"#include <spot/tl/print.hh>"
     cxx"#include <spot/tl/apcollect.hh>"
+
+    # automata
+    cxx"#include <spot/twaalgos/translate.hh>"
+    cxx"#include <spot/twaalgos/dot.hh>"
+    cxx"#include <spot/twaalgos/isdet.hh>"
 end
 
 export
