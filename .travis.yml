@@ -3,13 +3,10 @@
 language: julia
 os:
   - linux
+  - windows
 julia:
-  - 1.0
   - 1.1
   - nightly
-
-env:
-  - CONDA_JL_VERSION="3" PYTHON=""
 
 addons:
   apt:
@@ -17,7 +14,6 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-7
-    - python3-dev
     - clang-3.9
     - graphviz
 
