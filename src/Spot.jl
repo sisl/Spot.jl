@@ -4,12 +4,19 @@ module Spot
 using Cxx
 using Libdl
 
-const path_to_lib = joinpath(@__DIR__, "..", "deps", "usr", "lib", "libspot.so")
+
+const depfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
+if isfile(depfile)
+    include(depfile)
+else
+    error("libspot not properly installed. Please run Pkg.build(\"Spot\")")
+end
+
 const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
 
 function __init__()
     addHeaderDir(path_to_header, kind=C_System)
-    Libdl.dlopen(path_to_lib, Libdl.RTLD_GLOBAL)
+    Libdl.dlopen(libspot, Libdl.RTLD_GLOBAL)
     
     cxx"#include <iostream>"
     cxx"#include <vector>"
