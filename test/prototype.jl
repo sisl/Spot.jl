@@ -1,11 +1,19 @@
 using Revise
 using Spot 
+
+using Cxx
+
+
 # using LightGraphs
 # using MetaGraphs
 
 ## formula 
 
 f = ltl"F reach"
+
+translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)
+
+a = translate(translator, f)
 
 is_reachability(ltl"F reach")
 

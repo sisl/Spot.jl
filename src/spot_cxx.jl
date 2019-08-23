@@ -17,6 +17,10 @@ cxx"#include <spot/tl/formula.hh>"
 cxx"#include <spot/tl/parse.hh>"
 cxx"#include <spot/tl/print.hh>"
 cxx"#include <spot/tl/apcollect.hh>"
+cxx"#include <spot/twaalgos/translate.hh>"
+cxx"#include <spot/twaalgos/dot.hh>"
+cxx"#include <spot/twaalgos/isdet.hh>"
+cxx"#include <spot/twaalgos/split.hh>"
 
 f = @cxx spot::parse_formula(pointer("FGa"))
 f = SpotFormula(f)
@@ -45,9 +49,7 @@ String(@cxx spot::str_psl(f))
 
 icxx"std::cout << $f << '\n';";
 
-cxx"#include <spot/twaalgos/translate.hh>"
-cxx"#include <spot/twaalgos/dot.hh>"
-cxx"#include <spot/twaalgos/isdet.hh>"
+
 # cxx"#include <spot/twaalgos/hoa.hh>"
 
 
@@ -59,10 +61,13 @@ icxx"std::cout << $f << '\n';";
 
 # automata conversion 
 
-cxx"spot::translator trans;"
 
-trans = @cxxnew spot::translator()
-autom_type = @cxxnew spot::postprocessor::BA
+f = @cxx spot::parse_formula(pointer("(a U b) & GFc & GFd"))
+
+# cxx"spot::translator trans;"
+
+trans = @cxx spot::translator()
+# autom_type = @cxxnew spot::postprocessor::BA
 autom_type = @cxx spot::postprocessor::BA
 @cxx trans -> set_type(autom_type)
 autom_pref = @cxx spot::postprocessor::Deterministic
@@ -77,6 +82,8 @@ open("digraph.dot", "w") do io
   end
 end
 run(`dot -Tpng digraph.dot -o graph.png`)
+
+aut = @cxx spot::split_edges(aut)
 
 ## breaking 
 open("graph.svg") do f

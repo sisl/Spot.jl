@@ -3,6 +3,7 @@ module Spot
 
 using Cxx
 using Libdl
+using Parameters
 
 
 const depfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
@@ -48,9 +49,9 @@ export
 
 include("formulas.jl")
 
-# export
-#     AbstractAutomata,
-#     SpotAutomata,
+export
+    AbstractAutomata,
+    SpotAutomata
 #     num_states,
 #     num_edges,
 #     get_init_state_number,
@@ -62,13 +63,13 @@ include("formulas.jl")
 #     to_generalized_rabin,
 #     is_deterministic
 
-# include("automata.jl")
+include("automata.jl")
 
-# export
-#     LTLTranslator,
-#     translate
+export
+    LTLTranslator,
+    translate
 
-# include("translator.jl")
+include("translator.jl")
 
 # export
 #     DeterministicRabinAutomata,

@@ -22,11 +22,11 @@ using TikzPictures
     @test atomic_prop_collect(ltl"a & b & c & d") == [:a,:b,:c,:d]
 end
 
-# @testset "LTL To Automata" begin 
-#     ltl = ltl"(a U b) & GFc & GFd"
-#     translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)
-#     a = translate(translator, ltl)
-# end
+@testset "LTL To Automata" begin 
+    ltl = ltl"(a U b) & GFc & GFd"
+    translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)
+    a = translate(translator, ltl)
+end
 
 # @testset "SpotAutomata" begin
 #     ltl = ltl"(a U b) & GFc & GFd"
