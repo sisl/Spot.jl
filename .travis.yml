@@ -3,7 +3,7 @@
 language: julia
 os:
   - linux
-  - windows
+  - osx
 julia:
   - 1.1
   - nightly
@@ -20,7 +20,6 @@ addons:
 matrix:
   allow_failures:
     - julia: nightly
-    - os: windows
   fast_finish: true
 
 notifications:
