@@ -22,84 +22,114 @@ function split_edges(aut::SpotAutomata)
     return SpotAutomata(@cxx spot::split_edges(aut.a))
 end
 
-# function num_states(aut::SpotAutomata)
-#     return aut.a.num_states()
-# end
+function num_states(aut::SpotAutomata)
+    return convert(Int64, icxx"""$(aut.a)->num_states();""")
+end
 
-# function get_init_state_number(aut::SpotAutomata)
-#     return aut.a.get_init_state_number() + 1
-# end
+function get_init_state_number(aut::SpotAutomata)
+    return convert(Int64, icxx"""$(aut.a)->get_init_state_number();""") + 1
+end
 
-# function num_edges(aut::SpotAutomata)
-#     return aut.a.num_edges()
-# end
+function num_edges(aut::SpotAutomata)
+    return convert(Int64, icxx"""$(aut.a)->num_edges();""")
+end
 
-# function atomic_propositions(aut::SpotAutomata)
-#     return [Symbol(a.to_str()) for a in aut.a.ap()]
-# end
+function atomic_propositions(aut::SpotAutomata)
+    aps = icxx"""$(aut.a)->ap();"""
+    return [Symbol(SpotFormula(ap)) for ap in aps]
+end
 
-# function to_generalized_rabin(aut::SpotAutomata, split=true)
-#     return SpotAutomata(spot.to_generalized_rabin(aut.a), split)
-# end
+function to_generalized_rabin(aut::SpotAutomata, split=true)
+    gra = SpotAutomata(@cxx spot::to_generalized_rabin(aut.a))
+    if split
+        return split_edges(gra)
+    end
+    return gra
+end
 
-# function is_deterministic(aut::SpotAutomata)
-#     return aut.a.is_deterministic()
-# end
+function is_deterministic(aut::SpotAutomata)
+    return icxx"""$(aut.a)->is_deterministic();"""
+end
 
-# """
-#     get_edges_labels(aut::SpotAutomata)
-# returns a list of edges as pairs (src, dest) and their associated labels as a SpotFormula. 
-# The edges are labeled by a conjunction of all the atomic proposition.
-# See spot.split_edges documentation for more information. 
-# This is inspired from https://spot.lrde.epita.fr/tut24.html
-# """
-# function get_edges_labels(aut::SpotAutomata)
-#     bdict = aut.a.get_dict()
-#     edges = Tuple{Int64, Int64}[]
-#     labels = SpotFormula[]
-#     for e in aut.a.edges()
-#         push!(edges, (e.src + 1, e.dst + 1))
-#         push!(labels,  ((SpotFormula(spot.bdd_to_formula(e.cond, bdict)))))
-#     end
-#     return edges, labels 
-# end
+"""
+    edges(aut::SpotAutomata)
 
-# """
-#     label_to_function(ap::Vector{Symbol}, label::String)
-# returns a functions with atomic propositions as arguments. 
-# The function evaluates the boolean expression represented in the label.
-# """
-# function label_to_function(ap::Vector{Symbol}, label::String)
-#     parsed_formula = Meta.parse(label)
-#     fun_args = Expr(:tuple, ap...)
-#     ex = Expr(:->, fun_args, parsed_formula)
-#     return eval(ex)
-# end
+returns a list of edges as pairs (src, dest)
+"""
+function edges(aut::SpotAutomata)
+    cpp_edges = icxx"""
+        std::vector<std::vector<unsigned int>> edge_list;
+        for (auto& e: $(aut.a)->edges())
+            {
+                std::vector<unsigned int> edge;
+                edge.push_back(e.src);
+                edge.push_back(e.dst);
+                edge_list.push_back(edge);
+            }
+        edge_list;
+    """
 
-# """
-#     label_to_array(lab::SpotFormula)
-# convert a conjunction into an array of symbols. 
-# The outputs is the list of AP that are true in the input formula
-# """
-# function label_to_array(lab::SpotFormula)
-#     @assert is_boolean(lab)
-#     positive_ap = Symbol[]
-#     if length(lab.f) <= 1 
-#         if lab.f.is_tt()
-#             push!(positive_ap, Symbol(:true_constant))
-#         elseif !lab.f._is(spot.op_Not) 
-#             push!(positive_ap, Symbol(lab.f.ap_name()))
-#         else
-#             return positive_ap
-#         end
-#     end
-#     for ap in lab.f 
-#         if !ap._is(spot.op_Not)
-#             push!(positive_ap, Symbol(ap.ap_name()))
-#         end
-#     end
-#     return positive_ap
-# end
+    edges = Vector{Tuple{Int64, Int64}}(undef, length(cpp_edges))
+    for (i, e) in enumerate(cpp_edges)
+        edges[i] = (e[0], e[1]) # this is a cpp vector, so it is 0 index!
+    end
+    return edges
+end
+
+"""
+    get_edges_labels(aut::SpotAutomata)
+returns a list of all the edges labels as a SpotFormula.
+The edges are labeled by a conjunction of all the atomic proposition.
+See spot.split_edges documentation for more information. 
+This is inspired from https://spot.lrde.epita.fr/tut24.html
+"""
+function get_labels(aut::SpotAutomata)
+    cpp_labs = icxx"""
+        std::vector<spot::formula> labs_list;
+        auto bdict = $(aut.a)->get_dict();
+        for (auto& e: $(aut.a)->edges())
+            {
+                spot::formula f = spot::bdd_to_formula(e.cond, bdict);
+                labs_list.push_back(f);
+            }
+        labs_list;
+    """
+    return [SpotFormula(f) for f in cpp_labs]
+end
+
+const TRUE_CONSTANT = :true_constant
+
+"""
+    label_to_array(lab::SpotFormula)
+convert a conjunction into an array of symbols. 
+The outputs is the list of AP that are true in the input formula
+"""
+function label_to_array(lab::SpotFormula)
+    @assert is_boolean(lab)
+    positive_ap = Symbol[]
+    if length(lab) <= 1
+        if @cxx lab.f->is_tt()
+            push!(positive_ap, TRUE_CONSTANT)
+        elseif !( @cxx lab.f->is(spot::op::Not) )
+            push!(positive_ap, Symbol(lab))
+        else
+            return positive_ap
+        end
+    end
+    cpp_aps = icxx""" 
+    std::vector<spot::formula> positive_aps;
+    for (auto ap: $(lab.f)) {
+        if ( !ap.is(spot::op::Not) ){
+            positive_aps.push_back(ap);
+        }
+    }
+    positive_aps;
+    """
+    for ap in cpp_aps
+        push!(positive_ap, Symbol(SpotFormula(ap)))
+    end
+    return positive_ap
+end
 
 # """
 # Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
@@ -149,34 +179,35 @@ end
 #     return (inf_set, fin_set)
 # end
 
-# ## Rendering
+## Rendering
 
-# function plot(aut::SpotAutomata)
-#     autdot = aut.a.to_str(format="dot");
-#     texstr = mktempdir() do path
-#         dotfile = joinpath(path, "graph.dot")
-#         open(dotfile, "w") do f
-#             write(f, autdot)
-#         end
-#         xdotfile = joinpath(path, "graph.xdot")
-#         run(pipeline(`dot -Txdot $dotfile `, stdout=xdotfile))
-#         texfile = joinpath(path, "graph.tex")
-#         run(`dot2tex -tmath --figonly $xdotfile -o $texfile`)
+function plot_automata(aut::SpotAutomata)
+    texstr = mktempdir() do path
+        dotfile = joinpath(path, "graph.dot")
+        open(dotfile, "w") do f
+            redirect_stdout(f) do 
+                    icxx"spot::print_dot(std::cout, $(aut.a));"
+            end
+        end
+        xdotfile = joinpath(path, "graph.xdot")
+        run(pipeline(`dot -Txdot $dotfile `, stdout=xdotfile))
+        texfile = joinpath(path, "graph.tex")
+        run(`dot2tex -tmath --figonly $xdotfile -o $texfile`)
 
-#         # a bit hacky, replace the logical characters by latex command
-#         texstr = open(texfile) do f
-#             texstr = read(f, String)
-#             texstr = replace(texstr, "&" => " \\land ")
-#             texstr = replace(texstr, "!" => " \\lnot ")
-#             texstr = replace(texstr, "|" => "\\lor")
-#     #         texstr = replace(texstr, "\$[Büchi]\$" => "[B\\\"uchi]")
-#         end
+        # a bit hacky, replace the logical characters by latex command
+        texstr = open(texfile) do f
+            texstr = read(f, String)
+            texstr = replace(texstr, "&" => " \\land ")
+            texstr = replace(texstr, "!" => " \\lnot ")
+            texstr = replace(texstr, "|" => "\\lor")
+    #         texstr = replace(texstr, "\$[Büchi]\$" => "[B\\\"uchi]")
+        end
 
-#         return texstr
-#     end
-#     return TikzPicture(texstr, preamble="\n\\usepackage{amsmath,amsfonts,amssymb}\n\\usetikzlibrary{snakes,arrows,shapes}")
-# end
+        return texstr
+    end
+    return TikzPicture(texstr, preamble="\n\\usepackage{amsmath,amsfonts,amssymb}\n\\usetikzlibrary{snakes,arrows,shapes}")
+end
 
-# function Base.show(f::IO, a::MIME"image/svg+xml", aut::SpotAutomata)
-#  	show(f, a, plot(aut))
-# end
+function Base.show(f::IO, a::MIME"image/svg+xml", aut::SpotAutomata)
+ 	show(f, a, plot_automata(aut))
+end

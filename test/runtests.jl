@@ -28,16 +28,19 @@ end
     a = translate(translator, ltl)
 end
 
-# @testset "SpotAutomata" begin
-#     ltl = ltl"(a U b) & GFc & GFd"
-#     a = translate(LTLTranslator(), ltl)
-#     sa = SpotAutomata(a.a)
-#     @test sa == SpotAutomata(a.a, false)
-#     @test num_states(sa) == 2
-#     @test get_init_state_number(sa) == 1
-#     @test num_edges(sa) == 6
-#     @test atomic_propositions(sa) == [:a, :b, :c, :d]
-# end
+@testset "SpotAutomata" begin
+    ltl = ltl"(a U b) & GFc & GFd"
+    a = translate(LTLTranslator(), ltl)
+    @test num_states(a) == 2
+    @test get_init_state_number(a) == 1
+    @test num_edges(a) == 6
+    @test atomic_propositions(a) == [:a, :b, :c, :d]
+    sa = split_edges(a)
+    @test num_states(sa) == num_states(a)
+    @test num_edges(sa) > num_edges(a)
+    length(edges(a)) == num_edges(a)
+    length(get_labels(a)) == num_edges(a)
+end
 
 # @testset "DRA" begin 
 #     dra = DeterministicRabinAutomata(ltl"!a U b")
@@ -48,9 +51,9 @@ end
 #     @test dra.acc_sets == [(Set([]), Set([1]))]
 # end
 
-# @testset "doc" begin 
-#     @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
-# end
+@testset "doc" begin 
+    @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
+end
 
 # @testset "save plot" begin
 #     ltl = ltl"(a U b) & GFc & GFd"

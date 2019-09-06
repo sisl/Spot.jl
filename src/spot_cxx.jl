@@ -1,4 +1,5 @@
 # Just for prototyping!
+using Spot
 using Cxx
 using Libdl
 

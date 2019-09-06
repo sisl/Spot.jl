@@ -4,6 +4,7 @@ module Spot
 using Cxx
 using Libdl
 using Parameters
+using TikzPictures
 
 
 const depfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
@@ -15,12 +16,13 @@ end
 
 const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
 
-function __init__()
+# function __init__()
     addHeaderDir(path_to_header, kind=C_System)
     Libdl.dlopen(libspot, Libdl.RTLD_GLOBAL)
     
     cxx"#include <iostream>"
     cxx"#include <vector>"
+    cxx"#include <tuple>"
 
     # formula
     cxx"#include <spot/tl/formula.hh>"
@@ -29,10 +31,12 @@ function __init__()
     cxx"#include <spot/tl/apcollect.hh>"
 
     # automata
+    cxx"#include <spot/twa/formula2bdd.hh>"
     cxx"#include <spot/twaalgos/translate.hh>"
     cxx"#include <spot/twaalgos/dot.hh>"
     cxx"#include <spot/twaalgos/isdet.hh>"
-end
+    cxx"#include <spot/twaalgos/split.hh>"
+# end
 
 export
     SpotFormula,
@@ -51,17 +55,22 @@ include("formulas.jl")
 
 export
     AbstractAutomata,
-    SpotAutomata
-#     num_states,
-#     num_edges,
-#     get_init_state_number,
+    SpotAutomata,
+    num_states,
+    num_edges,
+    get_init_state_number,
+    is_deterministic,
+    to_generalized_rabin,
+    split_edges,
+    atomic_propositions,
+    edges,
+    get_labels,
+    label_to_array,
+    plot_automata
 #     get_edges_labels,
-#     atomic_propositions,
 #     label_to_function,
 #     label_to_array,
 #     get_rabin_acceptance,
-#     to_generalized_rabin,
-#     is_deterministic
 
 include("automata.jl")
 

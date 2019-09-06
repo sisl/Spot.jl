@@ -75,6 +75,15 @@ function atomic_prop_collect(f::SpotFormula)
     return [Symbol(SpotFormula(ap)) for ap in vap]
 end
 
+"""
+    Base.length(f::SpotFormula)
+    
+Returns the number of children in the formula AST
+"""
+function Base.length(f::SpotFormula)
+    return convert(Int64, @cxx f.f->size())
+end
+
 ## Rendering and conversion
 
 Base.string(f::SpotFormula) = String(@cxx spot::str_psl(f.f))
