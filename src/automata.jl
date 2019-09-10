@@ -40,7 +40,7 @@ function to_generalized_rabin(aut::SpotAutomata, split=true)
 end
 
 function is_deterministic(aut::SpotAutomata)
-    return icxx"""$(aut.a)->is_deterministic();"""
+    return icxx"""spot::is_deterministic($(aut.a));"""
 end
 
 """
@@ -63,7 +63,7 @@ function get_edges(aut::SpotAutomata)
 
     edges = Vector{Tuple{Int64, Int64}}(undef, length(cpp_edges))
     for (i, e) in enumerate(cpp_edges)
-        edges[i] = (e[0], e[1]) # this is a cpp vector, so it is 0 index!
+        edges[i] = (e[0] + 1, e[1] + 1) # this is a cpp vector, so it is 0 index!
     end
     return edges
 end

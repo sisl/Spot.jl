@@ -33,7 +33,11 @@ Options are set using the translator object.
 See https://spot.lrde.epita.fr/ltl2tgba.html for extra options that are not in LTLTranslator
 """
 function translate(translator::LTLTranslator, ltl::SpotFormula)
-    trans = @cxx spot::translator()
+    trans = @cxxnew spot::translator()
+    if translator.tgba
+        autom_type = @cxx spot::postprocessor::TGBA
+        @cxx trans -> set_type(autom_type)
+    end
     if translator.buchi 
         autom_type = @cxx spot::postprocessor::BA
         @cxx trans -> set_type(autom_type)
@@ -59,5 +63,30 @@ function translate(translator::LTLTranslator, ltl::SpotFormula)
         @cxx trans -> set_pref(autom_pref) 
     end
     aut = @cxx trans->run(ltl.f)
+    return SpotAutomata(aut)
+    # aut = icxx"""
+    #     spot::translator trans;
+    #     if ($(translator.buchi)){
+    #         trans.set_type(spot::postprocessor::BA);
+    #     }
+    #     else if ($(translator.generic)){
+    #         trans.set_type(spot::postprocessor::Generic);
+    #     }
+    #     else if ($(translator.parity)){
+    #         trans.set_type(spot::postprocessor::Parity);
+    #     }
+    #     else if ($(translator.monitor)){
+    #         trans.set_type(spot::postprocessor::Monitor);
+    #     }
+
+    #     if ($(translator.deterministic)){
+    #         trans.set_pref(spot::postprocessor::Deterministic);
+    #     }
+    #     else if ($(translator.state_based_acceptance)){
+    #         trans.set_pref(spot::postprocessor::SBAcc);
+    #     }
+    #     spot::twa_graph_ptr aut = trans.run($(ltl.f));
+    #     aut;
+    # """
     return SpotAutomata(aut)
 end

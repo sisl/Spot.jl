@@ -3,6 +3,14 @@ using Spot
 
 # using Cxx
 
+f = ltl"!a U b"
+
+translator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptance=true)
+
+aut = translate(translator, f)
+
+dra = DeterministicRabinAutomata(f)
+
 f = ltl"(a U b) & GFc & GFd"
 
 translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)

@@ -48,22 +48,24 @@ end
     @test num_states(ga) == num_states(a) # TODO find better test
 end
 
-@testset "DRA" begin 
-    dra = DeterministicRabinAutomata(ltl"!a U b")
-    @test num_states(dra) == 2
-    @test get_init_state_number(dra) == 2
-    @test nextstate(dra, 2, (:a, :b)) == 1
-    @test nextstate(dra, 2, ()) == 2
-    @test dra.acc_sets == [(Set([]), Set([1]))]
-end
-
-@testset "doc" begin 
-    @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
-end
 
 @testset "save plot" begin
     ltl = ltl"(a U b) & GFc & GFd"
     a = translate(LTLTranslator(), ltl)
-    p = Spot.plot(a)
+    p = plot_automata(a)
     save(PDF("test"), p)
+end
+
+@testset "DRA" begin 
+    dra = DeterministicRabinAutomata(ltl"!a U b")
+    @test num_states(dra) == 2
+    @test get_init_state_number(dra) == 1
+    @test nextstate(dra, 1, ()) == 1
+    @test nextstate(dra, 1,  (:b,)) == 2
+    @test nextstate(dra, 2, (:a,:b)) == 2
+    @test dra.acc_sets == [(Set([]), Set([2]))]
+end
+
+@testset "doc" begin 
+    @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
 end
