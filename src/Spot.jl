@@ -67,7 +67,7 @@ export
     to_generalized_rabin,
     split_edges,
     atomic_propositions,
-    edges,
+    get_edges,
     get_labels,
     label_to_array,
     get_rabin_acceptance,
