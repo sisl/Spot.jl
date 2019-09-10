@@ -3,6 +3,7 @@
 language: julia
 os:
   - linux
+  - osx
 julia:
   - 1.2
   - nightly
@@ -23,15 +24,15 @@ matrix:
 
 notifications:
   email: false
-before_script:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y pdf2svg
-  - sudo apt-get install -y texlive-latex-base
-  - sudo apt-get install -y texlive-binaries
-  - sudo apt-get install -y texlive-pictures
-  - sudo apt-get install -y texlive-latex-extra
-  - sudo pip install dot2tex
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
+# before_script:
+#   - sudo apt-get -qq update
+#   - sudo apt-get install -y pdf2svg
+#   - sudo apt-get install -y texlive-latex-base
+#   - sudo apt-get install -y texlive-binaries
+#   - sudo apt-get install -y texlive-pictures
+#   - sudo apt-get install -y texlive-latex-extra
+#   - sudo pip install dot2tex
+#   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia --project --color=yes -e 'import Pkg; Pkg.build(); Pkg.test(coverage=true)'
