@@ -23,9 +23,13 @@ using TikzPictures
 end
 
 @testset "LTL To Automata" begin 
-    ltl = ltl"(a U b) & GFc & GFd"
+    f1 = ltl"(a U b) & GFc & GFd"
     translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)
-    a = translate(translator, ltl)
+    a = translate(translator, f1)
+    translator = LTLTranslator(buchi=true)    
+    b = translate(translator, f1)
+    translator = LTLTranslator(parity=true)    
+    c = translate(translator, f1)
 end
 
 @testset "SpotAutomata" begin
@@ -38,26 +42,28 @@ end
     sa = split_edges(a)
     @test num_states(sa) == num_states(a)
     @test num_edges(sa) > num_edges(a)
-    length(edges(a)) == num_edges(a)
+    length(get_edges(a)) == num_edges(a)
     length(get_labels(a)) == num_edges(a)
+    ga = to_generalized_rabin(a) 
+    @test num_states(ga) == num_states(a) # TODO find better test
 end
 
-# @testset "DRA" begin 
-#     dra = DeterministicRabinAutomata(ltl"!a U b")
-#     @test num_states(dra) == 2
-#     @test get_init_state_number(dra) == 2
-#     @test nextstate(dra, 2, (:a, :b)) == 1
-#     @test nextstate(dra, 2, ()) == 2
-#     @test dra.acc_sets == [(Set([]), Set([1]))]
-# end
+@testset "DRA" begin 
+    dra = DeterministicRabinAutomata(ltl"!a U b")
+    @test num_states(dra) == 2
+    @test get_init_state_number(dra) == 2
+    @test nextstate(dra, 2, (:a, :b)) == 1
+    @test nextstate(dra, 2, ()) == 2
+    @test dra.acc_sets == [(Set([]), Set([1]))]
+end
 
 @testset "doc" begin 
     @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
 end
 
-# @testset "save plot" begin
-#     ltl = ltl"(a U b) & GFc & GFd"
-#     a = translate(LTLTranslator(), ltl)
-#     p = Spot.plot(a)
-#     save(PDF("test"), p)
-# end
+@testset "save plot" begin
+    ltl = ltl"(a U b) & GFc & GFd"
+    a = translate(LTLTranslator(), ltl)
+    p = Spot.plot(a)
+    save(PDF("test"), p)
+end

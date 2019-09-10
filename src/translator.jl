@@ -58,6 +58,9 @@ function translate(translator::LTLTranslator, ltl::SpotFormula)
         autom_pref = @cxx spot::postprocessor::SBAcc
         @cxx trans -> set_pref(autom_pref) 
     end
-    aut = icxx"""$trans.run($(ltl.f));"""
+    # aut = icxx"""auto a $trans.run($(ltl.f));
+    #              a;
+    #            """
+    aut = @cxx trans->run(ltl.f)
     return SpotAutomata(aut)
 end

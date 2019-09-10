@@ -5,6 +5,8 @@ using Cxx
 using Libdl
 using Parameters
 using TikzPictures
+using LightGraphs
+using MetaGraphs
 
 
 const depfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
@@ -16,7 +18,7 @@ end
 
 const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
 
-# function __init__()
+function __init__()
     addHeaderDir(path_to_header, kind=C_System)
     Libdl.dlopen(libspot, Libdl.RTLD_GLOBAL)
     
@@ -32,11 +34,13 @@ const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
 
     # automata
     cxx"#include <spot/twa/formula2bdd.hh>"
+    cxx"#include <spot/twa/acc.hh>"
     cxx"#include <spot/twaalgos/translate.hh>"
     cxx"#include <spot/twaalgos/dot.hh>"
     cxx"#include <spot/twaalgos/isdet.hh>"
     cxx"#include <spot/twaalgos/split.hh>"
-# end
+    cxx"#include <spot/twaalgos/totgba.hh>"
+end
 
 export
     SpotFormula,
@@ -66,11 +70,8 @@ export
     edges,
     get_labels,
     label_to_array,
+    get_rabin_acceptance,
     plot_automata
-#     get_edges_labels,
-#     label_to_function,
-#     label_to_array,
-#     get_rabin_acceptance,
 
 include("automata.jl")
 
@@ -80,10 +81,10 @@ export
 
 include("translator.jl")
 
-# export
-#     DeterministicRabinAutomata,
-#     nextstate
+export
+    DeterministicRabinAutomata,
+    nextstate
 
-# include("rabin_automata.jl")
+include("rabin_automata.jl")
 
 end # module spot

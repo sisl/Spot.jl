@@ -6,14 +6,6 @@ struct SpotAutomata <: AbstractAutomata
     a::Cxx.CxxCore.CppValue
 end
 
-# function SpotAutomata(a::Cxx.CxxCore.CppValue, split::Bool)
-#     if split
-#         return SpotAutomata(@cxx spot::split_edges(a))
-#     else
-#         return SpotAutomata(a)
-#     end
-# end
-
 """
     split_edges(aut::SpotAutomata)
 add dummy edges
@@ -56,7 +48,7 @@ end
 
 returns a list of edges as pairs (src, dest)
 """
-function edges(aut::SpotAutomata)
+function get_edges(aut::SpotAutomata)
     cpp_edges = icxx"""
         std::vector<std::vector<unsigned int>> edge_list;
         for (auto& e: $(aut.a)->edges())
@@ -131,53 +123,62 @@ function label_to_array(lab::SpotFormula)
     return positive_ap
 end
 
-# """
-# Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
-# where Fin is a set of states to be visited finitely often and Inf inifinitely often 
-# """
-# function get_rabin_acceptance(aut::SpotAutomata)
-#     acc = aut.a.acc()
-#     israbin, acc_sets = acc.is_rabin_like()
-#     @assert israbin "SpotError: automata is not Rabin like"
-#     fin_inf_sets = Vector{Tuple{Set{Int64}, Set{Int64}}}(undef, length(acc_sets))
-#     for (i,s) in enumerate(acc_sets)
-#         stateinfset = Set{Int64}()
-#         statefinset = Set{Int64}()
-#         infset = Set(collect(s.inf.sets()))
-#         finset = Set(collect(s.fin.sets()))
-#         for state in 1:aut.a.num_states()
-#             stateset = Set(collect(aut.a.state_acc_sets(state - 1).sets()))
-#             if !isempty(intersect(infset,stateset))
-#                 push!(stateinfset, state)
-#             elseif !isempty(intersect(finset, stateset))
-#                 push!(statefinset, state)
-#             end
-#         end
-#         fin_inf_sets[i] = (statefinset, stateinfset)
-#     end
-#     return fin_inf_sets
-# end
+"""
+    get_rabin_acceptance(aut::SpotAutomata)
+Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
+where Fin is a set of states to be visited finitely often and Inf inifinitely often 
+"""
+function get_rabin_acceptance(aut::SpotAutomata)
+    acc = icxx"$(aut.a)->acc();"
+    rabin_pairs = icxx"""
+                std::vector<spot::acc_cond::rs_pair> pairs;
+                $acc.is_rabin_like(pairs);
+                pairs;
+                """
+    @assert !isempty(rabin_pairs) "SpotError: automata is not Rabin like"
+    fin_inf_sets = Vector{Tuple{Set{Int64}, Set{Int64}}}(undef, length(rabin_pairs))
+    for (i,s) in enumerate(rabin_pairs)
+        stateinfset = Set{Int64}()
+        statefinset = Set{Int64}()
+        infset = convert(Set{Int64}, icxx"$s.inf.sets();")
+        finset = convert(Set{Int64}, icxx"$s.fin.sets();")
 
-# """
-#     get_inf_fin_sets(aut::SpotAutomata)
-# Given a SpotAutomata, parse the accepting condition and returns
-#  the set of states that must be visited infinitely often (inf_set)
-#  and the set of states that must be visited finitely often (fin_set)
-# """
-# function get_inf_fin_sets(aut::SpotAutomata)
-#     inf_set=Set{Int64}()
-#     fin_set =Set{Int64}()
-#     l = aut.a.get_acceptance().__str__() #XXX hack
-#     inf_set = Set{Int64}()
-#     for m in eachmatch(r"Inf\(\d+\)", l)
-#         push!(inf_set, parse(Int64, match(r"\d+",m.match).match))
-#     end
-#     fin_set = Set{Int64}()
-#     for m in eachmatch(r"Fin\(\d+\)", l)
-#         push!(fin_set, parse(Int64, match(r"\d+",m.match).match))
-#     end    
-#     return (inf_set, fin_set)
-# end
+
+        for state in 1:num_states(aut)
+            stateset = convert(Set{Int64}, icxx"$(aut.a)->state_acc_sets($state - 1).sets();")
+            if !isempty(intersect(infset,stateset))
+                push!(stateinfset, state)
+            elseif !isempty(intersect(finset, stateset))
+                push!(statefinset, state)
+            end
+        end
+        fin_inf_sets[i] = (statefinset, stateinfset)
+    end
+    return fin_inf_sets
+end
+
+const AccCond = Cxx.CxxCore.CppRef{Cxx.CxxCore.CppBaseType{Symbol("spot::acc_cond")},(false, false, false)}
+
+function is_rabin_like(acc::AccCond)
+    rabin = icxx"""
+    std::vector<spot::acc_cond::rs_pair> pairs;
+    $acc.is_rabin_like(pairs);
+    """
+    return convert(Bool, rabin)
+end
+
+const MarkContainer = Cxx.CxxCore.CppValue{Cxx.CxxCore.CxxQualType{Cxx.CxxCore.CppBaseType{Symbol("spot::internal::mark_container")},(false, false, false)},4}
+
+function Base.convert(::typeof(Set{Int64}), mc::MarkContainer)
+    v = icxx"""
+        std::vector<unsigned int> vec;
+        for (unsigned int s: $mc){
+            vec.push_back(s);
+        }
+        vec;
+    """
+    return Set(collect(Int64, v))
+end
 
 ## Rendering
 
