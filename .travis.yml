@@ -3,7 +3,6 @@
 language: julia
 os:
   - linux
-  - osx
 julia:
   - 1.2
   - nightly
@@ -32,12 +31,6 @@ before_script:
   - sudo apt-get install -y texlive-pictures
   - sudo apt-get install -y texlive-latex-extra
   - sudo pip install dot2tex
-  # Every 30 seconds, look for the build log file. If it exists, then
-  # start watching its contents and printing them to stdout as they
-  # change. This has two effects:
-  #   1. it avoids Travis timing out because the build outputs nothing
-  #   2. it makes it more obvious what part of the build, if any, gets stuck
-  - while sleep 3; do tail ~/build/sisl/Spot.jl/deps/build.log -f ; done &
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
