@@ -6,6 +6,8 @@
 
 This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [Cxx.jl](https://github.com/JuliaInterop/Cxx.jl) to interface julia with the Spot c++ library. 
 
+If you wish to use `PyCall` instead and interact with the spot python bindings you should checkout the branch `pycall` (linux only).
+
 ## Installation 
 
 For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. In addition, the precompile binaries require `gcc` 7 or 8 (not needed for Mac).
