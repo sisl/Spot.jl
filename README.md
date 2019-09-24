@@ -8,7 +8,7 @@ This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/in
 
 ## Installation 
 
-For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed.
+For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. In addition, the precompile binaries require `gcc` 7 or 8 (not needed for Mac).
 
 ```julia
 using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
