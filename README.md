@@ -1,10 +1,12 @@
-# Spot
+# Spot (pycall)
 
 [![Build Status](https://travis-ci.org/sisl/Spot.jl.svg?branch=master)](https://travis-ci.org/sisl/Spot.jl)
 [![CodeCov](https://codecov.io/gh/sisl/Spot.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/Spot.jl)
 [![Coveralls](https://coveralls.io/repos/github/sisl/Spot.jl/badge.svg?branch=master)](https://coveralls.io/github/sisl/Spot.jl?branch=master)
 
 This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. 
+
+You are on the branch `pycall`. This version does not rely on `Cxx.jl` but uses `PyCall` to interface the spot python bindings. This branch supports linux only.
 It requires the python bindings of spot to be correctly installed and accessible via [PyCall.jl](https://github.com/JuliaPy/PyCall.jl)
 
 ## Installation 
