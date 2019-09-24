@@ -1,25 +1,46 @@
+__precompile__(false)
 module Spot
 
-# Package code goes here.
-using PyCall
+using Cxx
+using Libdl
 using Parameters
+using TikzPictures
 using LightGraphs
 using MetaGraphs
-using TikzPictures
 
-const spot = PyNULL()
 
-function __init__()
-    pyversion = PyCall.pyversion
-    pythonspot = "../deps/spot/lib/python"*string(pyversion.major)*"."*string(pyversion.minor)*"/site-packages/"
-    pushfirst!(PyVector(pyimport("sys").path),joinpath(dirname(@__FILE__), pythonspot))
-    # global spot = pyimport("spot")
-    copy!(spot, pyimport("spot"))
-    spot.setup() # for display style
+const depfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
+if isfile(depfile)
+    include(depfile)
+else
+    error("libspot not properly installed. Please run Pkg.build(\"Spot\")")
 end
 
-export 
-    spot
+const path_to_header = joinpath(@__DIR__, "..", "deps", "usr", "include")
+
+function __init__()
+    addHeaderDir(path_to_header, kind=C_System)
+    Libdl.dlopen(libspot, Libdl.RTLD_GLOBAL)
+    
+    cxx"#include <iostream>"
+    cxx"#include <vector>"
+    cxx"#include <tuple>"
+
+    # formula
+    cxx"#include <spot/tl/formula.hh>"
+    cxx"#include <spot/tl/parse.hh>"
+    cxx"#include <spot/tl/print.hh>"
+    cxx"#include <spot/tl/apcollect.hh>"
+
+    # automata
+    cxx"#include <spot/twa/formula2bdd.hh>"
+    cxx"#include <spot/twa/acc.hh>"
+    cxx"#include <spot/twaalgos/translate.hh>"
+    cxx"#include <spot/twaalgos/dot.hh>"
+    cxx"#include <spot/twaalgos/isdet.hh>"
+    cxx"#include <spot/twaalgos/split.hh>"
+    cxx"#include <spot/twaalgos/totgba.hh>"
+end
 
 export
     SpotFormula,
@@ -42,13 +63,15 @@ export
     num_states,
     num_edges,
     get_init_state_number,
-    get_edges_labels,
+    is_deterministic,
+    to_generalized_rabin,
+    split_edges,
     atomic_propositions,
-    label_to_function,
+    get_edges,
+    get_labels,
     label_to_array,
     get_rabin_acceptance,
-    to_generalized_rabin,
-    is_deterministic
+    plot_automata
 
 include("automata.jl")
 

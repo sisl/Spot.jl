@@ -4,11 +4,11 @@ using NBInclude
 using TikzPictures
 
 @testset "LTL Parsing" begin
-    f = spot.formula("p1 U p2 R (p3 & !p4)")
+    f = SpotFormula("p1 U p2 R (p3 & !p4)")
     # convert formula to string
-    @test f.to_str() == "p1 U (p2 R (p3 & !p4))"
+    @test string(f) == "p1 U (p2 R (p3 & !p4))"
     # check properties
-    @test f.is_ltl_formula()
+    @test is_ltl_formula(f)
     f = ltl"p1 U p2 R (p3 & !p4)" # check constructor
     @test is_ltl_formula(f)
     @test is_eventual(ltl"F a")
@@ -23,38 +23,49 @@ using TikzPictures
 end
 
 @testset "LTL To Automata" begin 
-    ltl = ltl"(a U b) & GFc & GFd"
+    f1 = ltl"(a U b) & GFc & GFd"
     translator = LTLTranslator(deterministic=true, generic=true, state_based_acceptance=true)
-    a = translate(translator, ltl)
+    a = translate(translator, f1)
+    translator = LTLTranslator(buchi=true)    
+    b = translate(translator, f1)
+    translator = LTLTranslator(parity=true)    
+    c = translate(translator, f1)
 end
 
 @testset "SpotAutomata" begin
     ltl = ltl"(a U b) & GFc & GFd"
     a = translate(LTLTranslator(), ltl)
-    sa = SpotAutomata(a.a)
-    @test sa == SpotAutomata(a.a, false)
-    @test num_states(sa) == 2
-    @test get_init_state_number(sa) == 1
-    @test num_edges(sa) == 6
-    @test atomic_propositions(sa) == [:a, :b, :c, :d]
+    @test num_states(a) == 2
+    @test get_init_state_number(a) == 1
+    @test num_edges(a) == 6
+    @test atomic_propositions(a) == [:a, :b, :c, :d]
+    sa = split_edges(a)
+    @test num_states(sa) == num_states(a)
+    @test num_edges(sa) > num_edges(a)
+    length(get_edges(a)) == num_edges(a)
+    length(get_labels(a)) == num_edges(a)
+    ga = to_generalized_rabin(a) 
+    @test num_states(ga) == num_states(a) # TODO find better test
+end
+
+
+@testset "save plot" begin
+    ltl = ltl"(a U b) & GFc & GFd"
+    a = translate(LTLTranslator(), ltl)
+    p = plot_automata(a)
+    save(PDF("test"), p)
 end
 
 @testset "DRA" begin 
     dra = DeterministicRabinAutomata(ltl"!a U b")
     @test num_states(dra) == 2
-    @test get_init_state_number(dra) == 2
-    @test nextstate(dra, 2, (:a, :b)) == 1
-    @test nextstate(dra, 2, ()) == 2
-    @test dra.acc_sets == [(Set([]), Set([1]))]
+    @test get_init_state_number(dra) == 1
+    @test nextstate(dra, 1, ()) == 1
+    @test nextstate(dra, 1,  (:b,)) == 2
+    @test nextstate(dra, 2, (:a,:b)) == 2
+    @test dra.acc_sets == [(Set([]), Set([2]))]
 end
 
 @testset "doc" begin 
     @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
-end
-
-@testset "save plot" begin
-    ltl = ltl"(a U b) & GFc & GFd"
-    a = translate(LTLTranslator(), ltl)
-    p = Spot.plot(a)
-    save(PDF("test"), p)
 end

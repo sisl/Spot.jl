@@ -18,13 +18,15 @@ end
 # extract a Rabin Automata from an LTL formula using Spot.jl
 function DeterministicRabinAutomata(ltl::SpotFormula, 
                                     translator::LTLTranslator = LTLTranslator(deterministic=true, buchi=true, state_based_acceptance=true))
-    dra = SpotAutomata(translate(translator, ltl).a, true) # split edges
-    # dra = to_generalized_rabin(aut) # unclear if needed
+    aut = translate(translator, ltl) 
+    dra = to_generalized_rabin(aut) # unclear if needed
+    dra = split_edges(dra) 
     @assert is_deterministic(dra)
     states = 1:num_states(dra)
     initial_state = get_init_state_number(dra) 
     APs = atomic_propositions(dra)
-    edgelist, labels = get_edges_labels(dra)
+    edgelist = get_edges(dra)
+    labels = get_labels(dra)
     sdg = SimpleDiGraph(num_states(dra))
     for e in edgelist
         add_edge!(sdg, e)
@@ -52,7 +54,7 @@ get_rabin_acceptance(aut::DeterministicRabinAutomata) = aut.acc_sets
 function nextstate(dra::DeterministicRabinAutomata, q::Int64, lab::NTuple{N,Symbol}) where N
     next_states = neighbors(dra.transition, q)
     edge_it = filter_edges(dra.transition, 
-                           (g, e) -> (src(e) == q) && (lab ∈ props(g, e)[:cond] || (:true_constant,) ∈ props(g, e)[:cond]))
+                           (g, e) -> (src(e) == q) && (lab ∈ props(g, e)[:cond] || (TRUE_CONSTANT,) ∈ props(g, e)[:cond]))
     edge_list = collect(edge_it)
     if isempty(edge_list)
         return nothing

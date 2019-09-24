@@ -4,19 +4,19 @@
 [![CodeCov](https://codecov.io/gh/sisl/Spot.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/Spot.jl)
 [![Coveralls](https://coveralls.io/repos/github/sisl/Spot.jl/badge.svg?branch=master)](https://coveralls.io/github/sisl/Spot.jl?branch=master)
 
-This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. 
-It requires the python bindings of spot to be correctly installed and accessible via [PyCall.jl](https://github.com/JuliaPy/PyCall.jl)
+This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [Cxx.jl](https://github.com/JuliaInterop/Cxx.jl) to interface julia with the Spot c++ library. 
+
+If you wish to use `PyCall` instead and interact with the spot python bindings you should checkout the branch `pycall` (linux only).
 
 ## Installation 
 
-For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed.
+For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. In addition, the precompile binaries require `gcc` 7 or 8 (not needed for Mac).
 
 ```julia
 using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
 ```
 
-Python dependencies:
-    - IPython (for visualization in jupyter notebook)
+**Windows support:** The registered version of Cxx.jl is currently broken for Windows. However, the branch `gn-patch-crash` is working for now. The build script should checkout the right branch. Otherwise run `] add Cxx#gn-patch-crash` in the julia environment where you wish to install Spot.
 
 ## Usage 
 
@@ -46,11 +46,11 @@ a = translate(translator, ltl)
 
 A basic tutorial is available in [docs/spot_basic_tutorial.ipynb](https://github.com/sisl/Spot.jl/blob/master/docs/spot_basic_tutorial.ipynb) 
 
+### Notes
 
-## TODOs
-
-- [ ] Use CXXWrap.jl to avoid relying on a third language (python) and automatically import all the spot functions.
-- [ ] Try using BinaryBuilder. A first experiment was not successful, the path to `libspot.so` in the python bindings is wrong.
+Right now, the wrapping of all the c++ functions present in `libspot` is not automatic. 
+Every function can be called using the Cxx interface. 
+If you need to wrap a function that has not been wrapped yet, feel free to submit a Pull Request.
 
 ## Acknowledgement 
 
