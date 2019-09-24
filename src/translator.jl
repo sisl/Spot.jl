@@ -64,29 +64,4 @@ function translate(translator::LTLTranslator, ltl::SpotFormula)
     end
     aut = @cxx trans->run(ltl.f)
     return SpotAutomata(aut)
-    # aut = icxx"""
-    #     spot::translator trans;
-    #     if ($(translator.buchi)){
-    #         trans.set_type(spot::postprocessor::BA);
-    #     }
-    #     else if ($(translator.generic)){
-    #         trans.set_type(spot::postprocessor::Generic);
-    #     }
-    #     else if ($(translator.parity)){
-    #         trans.set_type(spot::postprocessor::Parity);
-    #     }
-    #     else if ($(translator.monitor)){
-    #         trans.set_type(spot::postprocessor::Monitor);
-    #     }
-
-    #     if ($(translator.deterministic)){
-    #         trans.set_pref(spot::postprocessor::Deterministic);
-    #     }
-    #     else if ($(translator.state_based_acceptance)){
-    #         trans.set_pref(spot::postprocessor::SBAcc);
-    #     }
-    #     spot::twa_graph_ptr aut = trans.run($(ltl.f));
-    #     aut;
-    # """
-    return SpotAutomata(aut)
 end
