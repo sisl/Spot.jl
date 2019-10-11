@@ -13,7 +13,7 @@ If you wish to use `PyCall` instead and interact with the spot python bindings y
 For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. In addition, the precompile binaries require `gcc` 7 or 8 (not needed for Mac).
 
 ```julia
-using Pkg; Pkg.add("https://github.com/sisl/Spot.jl")
+using Pkg; Pkg.add("Spot.jl")
 ```
 
 **Windows support:** The registered version of Cxx.jl is currently broken for Windows. However, the branch `gn-patch-crash` is working for now. The build script should checkout the right branch. Otherwise run `] add Cxx#gn-patch-crash` in the julia environment where you wish to install Spot.
