@@ -16,8 +16,6 @@ For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [do
 using Pkg; Pkg.add("Spot.jl")
 ```
 
-**Windows support:** The registered version of Cxx.jl is currently broken for Windows. However, the branch `gn-patch-crash` is working for now. The build script should checkout the right branch. Otherwise run `] add Cxx#gn-patch-crash` in the julia environment where you wish to install Spot.
-
 ## Usage 
 
 ### LTL Manipulation
