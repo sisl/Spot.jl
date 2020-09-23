@@ -46,6 +46,15 @@ end
     length(get_labels(a)) == num_edges(a)
     ga = to_generalized_rabin(a) 
     @test num_states(ga) == num_states(a) # TODO find better test
+    f = ltl"!a"
+    b = translate(LTLTranslator(), f)
+    b = to_generalized_rabin(b)
+    b = split_edges(b)
+    labs = get_labels(b)
+    @test length(labs) == 1
+    aps = label_to_array.(labs)
+    @test length(aps) == 1 
+    @test isempty(aps[1])
 end
 
 

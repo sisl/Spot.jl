@@ -5,7 +5,7 @@ From the spot documentation:
 
 """
     DeterministicRabinAutomata
-Datastructure representing a deterministic Rabin Automata. It is parameterized by the state type Q.
+Datastructure representing a deterministic Rabin Automata.
 """
 struct DeterministicRabinAutomata <: AbstractAutomata
     initial_state::Int64

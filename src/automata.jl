@@ -102,7 +102,7 @@ function label_to_array(lab::SpotFormula)
     if length(lab) <= 1
         if @cxx lab.f->is_tt()
             push!(positive_ap, TRUE_CONSTANT)
-        elseif !( @cxx lab.f->is(spot::op::Not) )
+        elseif !( @cxx lab.f->is(@cxx spot::op::Not) )
             push!(positive_ap, Symbol(lab))
         else
             return positive_ap
