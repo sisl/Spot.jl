@@ -7,11 +7,6 @@ products = [
     LibraryProduct(prefix, ["libspot"], :libspot),
 ]
 
-if Sys.iswindows()
-    using Pkg
-    Pkg.add(PackageSpec(name="Cxx", rev="gn-patch-crash"))
-end
-
 # Download binaries from hosted location
 bin_prefix = "https://github.com/MaximeBouton/SpotBuilder/releases/download/v2.8.1"
 
