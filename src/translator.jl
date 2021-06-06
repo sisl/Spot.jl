@@ -33,35 +33,25 @@ Options are set using the translator object.
 See https://spot.lrde.epita.fr/ltl2tgba.html for extra options that are not in LTLTranslator
 """
 function translate(translator::LTLTranslator, ltl::SpotFormula)
-    trans = @cxxnew spot::translator()
+    cpptrans = Spot.Translator()
     if translator.tgba
-        autom_type = @cxx spot::postprocessor::TGBA
-        @cxx trans -> set_type(autom_type)
+        Spot.set_type(cpptrans, Spot.TGBA)
     end
     if translator.buchi 
-        autom_type = @cxx spot::postprocessor::BA
-        @cxx trans -> set_type(autom_type)
+        Spot.set_type(cpptrans, Spot.BA)
     end
     if translator.monitor
-        autom_type = @cxx spot::postprocessor::Monitor
-        @cxx trans -> set_type(autom_type)
-    end
-    if translator.deterministic
-        autom_pref = @cxx spot::postprocessor::Deterministic
-        @cxx trans -> set_pref(autom_pref)
+        Spot.set_type(cpptrans, Spot.Monitor)
     end
     if translator.generic
-        autom_type = @cxx spot::postprocessor::Generic
-        @cxx trans -> set_type(autom_type)
+        Spot.set_type(cpptrans, Spot.Generic)
     end
     if translator.parity
-        autom_type = @cxx spot::postprocessor::Parity
-        @cxx trans -> set_type(autom_type)
+        Spot.set_type(cpptrans, Spot.Parity)
     end
     if translator.state_based_acceptance
-        autom_pref = @cxx spot::postprocessor::SBAcc
-        @cxx trans -> set_pref(autom_pref) 
+        Spot.set_pref(cpptrans, Spot.SBAcc)
     end
-    aut = @cxx trans->run(ltl.f)
+    aut = Spot.run_translator(cpptrans, ltl.f)
     return SpotAutomata(aut)
 end
