@@ -29,7 +29,6 @@ before_script:
   - sudo apt-get install -y texlive-pictures
   - sudo apt-get install -y texlive-latex-extra
   - sudo pip install dot2tex
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia --project --color=yes -e 'import Pkg; Pkg.build(); Pkg.test(coverage=true)'
