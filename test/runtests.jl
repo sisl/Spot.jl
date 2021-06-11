@@ -72,7 +72,7 @@ end
     @test dra.acc_sets == [(Set([]), Set([2]))]
 end
 
-if !ENV["SPOT_CI_TEST"] | Sys.islinux()
+if !haskey(ENV, "SPOT_CI_TEST") | Sys.islinux()
      @testset "save plot" begin
         ltl = ltl"(a U b) & GFc & GFd"
         a = translate(LTLTranslator(), ltl)
