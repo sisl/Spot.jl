@@ -48,10 +48,13 @@ jobs:
         run: sudo apt-get install pdf2svg texlive-latex-base texlive-binaries texlive-pictures texlive-latex-extra texlive-luatex
 
       # dot
-      - name: Install dot and dot2tex 
+      - name: Install dot
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install graphviz
+      - name: install dot2tex
+        if: matrix.os == 'ubuntu-latest'
         run: sudo pip install dot2tex
+        
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
