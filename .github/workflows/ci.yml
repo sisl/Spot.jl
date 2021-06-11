@@ -11,6 +11,8 @@ jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
+    env: 
+      - SPOT_CI_TEST=true
     strategy:
       fail-fast: false
       matrix:
@@ -19,6 +21,8 @@ jobs:
           - 'nightly'
         os:
           - ubuntu-latest
+          - macos-latest
+          - windows-latest
         arch:
           - x64
     steps:
@@ -40,11 +44,14 @@ jobs:
 
       # TexLive installation
       - name: Install TexLive
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install pdf2svg texlive-latex-base texlive-binaries texlive-pictures texlive-latex-extra texlive-luatex
 
-      # dot2tex 
-      - name: Install dot2tex 
-        run: sudo pip install dot2tex
+      # dot
+      - name: Install dot and dot2tex 
+        if: matrix.os == 'ubuntu-latest'
+        - run: sudo apt-get install graphviz
+        - run: sudo pip install dot2tex
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1

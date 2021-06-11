@@ -61,12 +61,6 @@ end
 end
 
 
-@testset "save plot" begin
-    ltl = ltl"(a U b) & GFc & GFd"
-    a = translate(LTLTranslator(), ltl)
-    p = plot_automata(a)
-    save(PDF("test"), p)
-end
 
 @testset "DRA" begin 
     dra = DeterministicRabinAutomata(ltl"!a U b")
@@ -78,6 +72,15 @@ end
     @test dra.acc_sets == [(Set([]), Set([2]))]
 end
 
-@testset "doc" begin 
-    @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
+if !ENV["SPOT_CI_TEST"] | Sys.islinux()
+     @testset "save plot" begin
+        ltl = ltl"(a U b) & GFc & GFd"
+        a = translate(LTLTranslator(), ltl)
+        p = plot_automata(a)
+        save(PDF("test"), p)
+    end
+
+    @testset "doc" begin 
+        @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
+    end
 end
