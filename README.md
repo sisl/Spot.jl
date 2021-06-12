@@ -2,7 +2,6 @@
 
 [![Build status](https://github.com/sisl/Spot.jl/workflows/CI/badge.svg)](https://github.com/sisl/Spot.jl/actions)
 [![CodeCov](https://codecov.io/gh/sisl/Spot.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/Spot.jl)
-[![Coveralls](https://coveralls.io/repos/github/sisl/Spot.jl/badge.svg?branch=master)](https://coveralls.io/github/sisl/Spot.jl?branch=master)
 
 This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [Cxx.jl](https://github.com/JuliaInterop/Cxx.jl) to interface julia with the Spot c++ library. 
 
