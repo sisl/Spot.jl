@@ -3,17 +3,15 @@
 [![Build status](https://github.com/sisl/Spot.jl/workflows/CI/badge.svg)](https://github.com/sisl/Spot.jl/actions)
 [![CodeCov](https://codecov.io/gh/sisl/Spot.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/Spot.jl)
 
-This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [Cxx.jl](https://github.com/JuliaInterop/Cxx.jl) to interface julia with the Spot c++ library. 
-
-If you wish to use `PyCall` instead and interact with the spot python bindings you should checkout the branch `pycall` (linux only).
+This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [CxxWrap.jl](https://github.com/JuliaInterop/CxxWrap.jl) to interface julia with the Spot c++ library. 
 
 ## Installation 
-
-For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. In addition, the precompile binaries require `gcc` 7 or 8 (not needed for Mac).
 
 ```julia
 using Pkg; Pkg.add("Spot.jl")
 ```
+
+For the rendering, Spot requires [GraphViz](https://graphviz.gitlab.io/) and [dot2tex](https://dot2tex.readthedocs.io/en/latest/index.html) to be installed. 
 
 ## Usage 
 
@@ -51,4 +49,4 @@ If you need to wrap a function that has not been wrapped yet, feel free to submi
 
 ## Acknowledgement 
 
-Thanks to Alexandre Duretz-Lutz for all the help provided.
+Thanks to Alexandre Duretz-Lutz and Mosé Giordano for all the help provided in cross compiling Spot.
