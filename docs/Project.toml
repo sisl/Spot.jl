@@ -1,0 +1,7 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
+
+[compat]
+Documenter = "0.26"
+TikzPictures = "3.3"

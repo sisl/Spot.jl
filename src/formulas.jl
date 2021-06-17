@@ -75,10 +75,6 @@ end
 Base.string(f::SpotFormula) = String(Spot.str_psl(f.f, false))
 Base.Symbol(f::SpotFormula) = Symbol(string(f))
 
-function Base.show(io::IO, m::MIME{Symbol("text/latex")}, f::SpotFormula)
-    show(io, m, latexstring(String(Spot.str_latex_psl(f.f, false))))
-end
-
 function Base.show(io::IO, mime::MIME"text/plain", f::SpotFormula)
     show(io, mime, string(f))
 end

@@ -1,6 +1,5 @@
 using Spot
 using Test
-using NBInclude
 using TikzPictures
 
 @testset "LTL Parsing" begin
@@ -81,6 +80,6 @@ if !haskey(ENV, "SPOT_CI_TEST") | Sys.islinux()
     end
 
     @testset "doc" begin 
-        @nbinclude(joinpath(@__DIR__, "..", "docs", "spot_basic_tutorial.ipynb"))
+        include(joinpath(@__DIR__, "..", "docs", "src", "spot_basics.jl"))
     end
 end
