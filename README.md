@@ -2,6 +2,8 @@
 
 [![Build status](https://github.com/sisl/Spot.jl/workflows/CI/badge.svg)](https://github.com/sisl/Spot.jl/actions)
 [![CodeCov](https://codecov.io/gh/sisl/Spot.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/Spot.jl)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://sisl.github.io/Spot.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://sisl.github.io/Spot.jl/dev)
 
 This package provides Julia bindings to the [Spot](https://spot.lrde.epita.fr/index.html) library for LTL and automata manipulation. It relies on [CxxWrap.jl](https://github.com/JuliaInterop/CxxWrap.jl) to interface julia with the Spot c++ library. You can find the c++ code with the wrapped functions in [spot_julia](https://github.com/MaximeBouton/spot_julia/), and the build script for the `jll` file in [Yggdrasil](https://github.com/JuliaPackaging/Yggdrasil/blob/master/S/Spot_julia/build_tarballs.jl).
 

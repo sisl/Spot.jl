@@ -12,3 +12,7 @@ makedocs(sitename="Spot.jl Documentation",
         "index.md",
         "spot_basics.md"
     ])
+
+deploydocs(
+    repo = "github.com/sisl/Spot.jl.git",
+)
