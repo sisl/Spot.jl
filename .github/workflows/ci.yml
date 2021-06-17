@@ -68,6 +68,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # TexLive installation
+      - name: Install TexLive
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install pdf2svg texlive-latex-base texlive-binaries texlive-pictures texlive-latex-extra texlive-luatex
+
+      # dot
+      - name: Install dot
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install graphviz
+      - name: install dot2tex
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo pip install dot2tex
+        
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
