@@ -29,6 +29,10 @@ safety_aut = translate(translator, safety)
 
 translator = LTLTranslator(buchi=true, deterministic=true, state_based_acceptance=true)
 surveillance_aut = translate(translator, surveillance)
+using TikzPictures; nothing # hide
+save(SVG("test"), plot_automata(surveillance_aut)); nothing # hide
+
+# ![](test.svg)
 
 # ## Display Automata 
 

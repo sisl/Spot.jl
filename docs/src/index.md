@@ -7,8 +7,3 @@ Spot.jl exposes only a limited subset of Spot's existing functionalities wrapped
 ```@contents
 ```
 
-## Index
-
-```@index
-```
-
