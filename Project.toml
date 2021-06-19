@@ -1,7 +1,7 @@
 name = "Spot"
 uuid = "f11abc24-ce50-11e8-2475-af6658d13f2b"
 repo = "https://github.com/sisl/Spot.jl"
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 CxxWrap = "1f15a43c-97ca-5a2a-ae31-89f07a497df4"
