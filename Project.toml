@@ -12,7 +12,7 @@ Spot_julia_jll = "b9ff107b-b78e-5f57-8772-57a339630ba9"
 TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 
 [compat]
-CxxWrap = "0.11"
+CxxWrap = "0.11, 0.12"
 LightGraphs = "1.3"
 MetaGraphs = "0.6"
 Parameters = "0.12"
