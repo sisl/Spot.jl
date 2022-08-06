@@ -3,7 +3,7 @@ module Spot
 using CxxWrap
 using Parameters
 using TikzPictures
-using LightGraphs
+using Graphs
 using MetaGraphs
 using Spot_julia_jll
 @wrapmodule libspot_julia
