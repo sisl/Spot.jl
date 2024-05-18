@@ -13,7 +13,8 @@ TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 libcxxwrap_julia_jll = "3eaa8342-bff7-56a5-9981-c04077f7cee7"
 
 [compat]
-CxxWrap = "0.11, 0.12"
+libcxxwrap_julia_jll = "0.12.3"
+CxxWrap = "0.11, 0.12, 0.15"
 Graphs = "1.5"
 MetaGraphs = "0.6, 0.7"
 Parameters = "0.12"
