@@ -19,7 +19,7 @@ end
 number of states in the automata
 """
 function num_states(aut::SpotAutomata)
-    return convert(Int64, Spot.num_states(aut.a))
+    return convert(Int64, Spot.num_states(aut.a[]))
 end
 
 """
@@ -27,7 +27,7 @@ end
 number of the initial state in the automata (0-indexed!!)
 """
 function get_init_state_number(aut::SpotAutomata)
-    return convert(Int64, Spot.get_init_state_number(aut.a) + 1)
+    return convert(Int64, Spot.get_init_state_number(aut.a[]) + 1)
 end
 
 """
@@ -35,7 +35,7 @@ end
 number of edges in the automata
 """
 function num_edges(aut::SpotAutomata)
-    return convert(Int64, Spot.num_edges(aut.a))
+    return convert(Int64, Spot.num_edges(aut.a[]))
 end
 
 """
@@ -43,7 +43,7 @@ end
 return a list of atomic propositions used in the automata, as Symbols
 """
 function atomic_propositions(aut::SpotAutomata)
-    aps = Spot.atomic_propositions(aut.a)
+    aps = Spot.atomic_propositions(aut.a[])
     return @. Symbol(SpotFormula(copy(aps)))
 end
 
@@ -65,7 +65,7 @@ end
 returns true if the automata is deterministic
 """
 function is_deterministic(aut::SpotAutomata)
-    return Spot.is_deterministic(aut.a)
+    return Spot.is_deterministic(aut.a[])
 end
 
 """
@@ -73,7 +73,7 @@ end
 returns a list of edges as pairs (src, dest)
 """
 function get_edges(aut::SpotAutomata)
-    cpp_edges = Spot.get_edges(aut.a)
+    cpp_edges = Spot.get_edges(aut.a[])
     edge_list = Vector{Int64}[convert.(Int64, copy.(c)) .+ 1 for c in copy.(cpp_edges)]
     return Tuple{Int64,Int64}[tuple(c...) for c in edge_list]
 end
@@ -86,7 +86,7 @@ See spot.split_edges documentation for more information.
 This is inspired from https://spot.lrde.epita.fr/tut24.html
 """
 function get_labels(aut::SpotAutomata)
-    cpp_labs = Spot.get_labels(aut.a)
+    cpp_labs = Spot.get_labels(aut.a[])
     return @. SpotFormula(copy(cpp_labs))
 end
 
@@ -119,7 +119,7 @@ Return a Rabin acceptance condition as a list of pairs (Fin, Inf)
 where Fin is a set of states to be visited finitely often and Inf inifinitely often 
 """
 function get_rabin_acceptance(aut::SpotAutomata)
-    fin_inf_sets_cpp = Spot.get_rabin_acceptance(aut.a)
+    fin_inf_sets_cpp = Spot.get_rabin_acceptance(aut.a[])
     fin_inf_sets = Tuple{Set{Int64}, Set{Int64}}[]
     for c in fin_inf_sets_cpp
         state_inf_set = Set{Int64}()
@@ -146,7 +146,7 @@ function plot_automata(aut::SpotAutomata)
         dotfile = joinpath(path, "graph.dot")
         open(dotfile, "w") do f
             redirect_stdout(f) do 
-                    Spot.print_dot(aut.a)
+                    Spot.print_dot(aut.a[])
             end
         end
         xdotfile = joinpath(path, "graph.xdot")

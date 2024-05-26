@@ -6,7 +6,7 @@ using TikzPictures
 using Graphs
 using MetaGraphs
 using Spot_julia_jll
-@wrapmodule libspot_julia
+@wrapmodule(Spot_julia_jll.get_libspot_julia_path)
 
 function __init__()
     @initcxx
