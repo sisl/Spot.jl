@@ -38,7 +38,7 @@ function DeterministicRabinAutomata(ltl::SpotFormula,
         if haskey(props(transition, Edge(e...)), :cond)
             push!(props(transition, Edge(e...))[:cond], l)
         else
-            set_prop!(transition, Edge(e...), :cond, Set{Tuple{Vararg{Symbol,N} where N}}([l]))
+            set_prop!(transition, Edge(e...), :cond, Set{Tuple{Vararg{Symbol}}}([l]))
         end
     end
     acc_sets = get_rabin_acceptance(dra)
