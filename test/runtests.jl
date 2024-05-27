@@ -59,27 +59,25 @@ end
     @test isempty(aps[1])
 end
 
+@testset "DRA" begin 
+    dra = DeterministicRabinAutomata(ltl"!a U b")
+    @test num_states(dra) == 2
+    @test get_init_state_number(dra) == 1
+    @test nextstate(dra, 1, ()) == 1
+    @test nextstate(dra, 1,  (:b,)) == 2
+    @test nextstate(dra, 2, (:a,:b)) == 2
+    @test dra.acc_sets == [(Set([]), Set([2]))]
+end
 
+if !haskey(ENV, "SPOT_CI_TEST") | Sys.islinux()
+     @testset "save plot" begin
+        ltl = ltl"(a U b) & GFc & GFd"
+        a = translate(LTLTranslator(), ltl)
+        p = plot_automata(a)
+        save(PDF("test"), p)
+    end
 
-# @testset "DRA" begin 
-#     dra = DeterministicRabinAutomata(ltl"!a U b")
-#     @test num_states(dra) == 2
-#     @test get_init_state_number(dra) == 1
-#     @test nextstate(dra, 1, ()) == 1
-#     @test nextstate(dra, 1,  (:b,)) == 2
-#     @test nextstate(dra, 2, (:a,:b)) == 2
-#     @test dra.acc_sets == [(Set([]), Set([2]))]
-# end
-
-# if !haskey(ENV, "SPOT_CI_TEST") | Sys.islinux()
-#      @testset "save plot" begin
-#         ltl = ltl"(a U b) & GFc & GFd"
-#         a = translate(LTLTranslator(), ltl)
-#         p = plot_automata(a)
-#         save(PDF("test"), p)
-#     end
-
-#     @testset "doc" begin 
-#         include(joinpath(@__DIR__, "..", "docs", "src", "spot_basics.jl"))
-#     end
-# end
+    @testset "doc" begin 
+        include(joinpath(@__DIR__, "..", "docs", "src", "spot_basics.jl"))
+    end
+end
