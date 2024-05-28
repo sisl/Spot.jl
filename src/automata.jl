@@ -65,7 +65,7 @@ end
 returns true if the automata is deterministic
 """
 function is_deterministic(aut::SpotAutomata)
-    return Spot.is_deterministic(aut.a[])
+    return Spot.is_deterministic(aut.a)
 end
 
 """
@@ -146,7 +146,7 @@ function plot_automata(aut::SpotAutomata)
         dotfile = joinpath(path, "graph.dot")
         open(dotfile, "w") do f
             redirect_stdout(f) do 
-                    Spot.print_dot(aut.a[])
+                    Spot.print_dot(aut.a)
             end
         end
         xdotfile = joinpath(path, "graph.xdot")
