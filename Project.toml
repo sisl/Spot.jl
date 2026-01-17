@@ -10,6 +10,7 @@ MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Spot_julia_jll = "b9ff107b-b78e-5f57-8772-57a339630ba9"
 TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
+libcxxwrap_julia_jll = "3eaa8342-bff7-56a5-9981-c04077f7cee7"
 
 [compat]
 CxxWrap = "0.11, 0.12, 0.15, 0.16, 0.17"
@@ -19,6 +20,7 @@ Parameters = "0.12"
 Spot_julia_jll = "2.13.1"
 TikzPictures = "3.5"
 julia = "1.6, 1.7, 1.8, 1.9, 1.10"
+libcxxwrap_julia_jll = "0.14.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
