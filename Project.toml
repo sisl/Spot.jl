@@ -12,13 +12,13 @@ Spot_julia_jll = "b9ff107b-b78e-5f57-8772-57a339630ba9"
 TikzPictures = "37f6aa50-8035-52d0-81c2-5a1d08754b2d"
 
 [compat]
-CxxWrap = "0.11, 0.12, 0.15, 0.16, 0.17"
+CxxWrap = "0.17"
 Graphs = "1.5"
 MetaGraphs = "0.6, 0.7"
 Parameters = "0.12"
 Spot_julia_jll = "2.14.5"
 TikzPictures = "3.5"
-julia = "1.6, 1.7, 1.8, 1.9, 1.10"
+julia = "1.10"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
